@@ -1,4 +1,4 @@
-# interswitchcreditaccount
+# exception portal
 
 ## Project setup
 ```
