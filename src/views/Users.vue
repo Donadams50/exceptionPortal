@@ -298,9 +298,9 @@ export default {
   
     }
   },
-  mounted () {    
-      
-       this.$store.dispatch('loadUsers')
+  mounted () { 
+    if(this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'){
+           this.$store.dispatch('loadUsers')
        .then(()=>{
              console.log(this.$store.state.alUsers)
           
@@ -311,6 +311,13 @@ export default {
                  alert(error)
               
           }) 
+    } else{
+this.$router.push({
+         path: "/",
+        })
+    } 
+      
+       
 
  
           },

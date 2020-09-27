@@ -90,7 +90,8 @@ export default new Vuex.Store({
         // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
            return new Promise ((resolve, reject)=>{
            axios
-             .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID='+userId+'')   
+            .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID='+userId+'') 
+          //   .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID=sumbomatic@gmail.com')  
              .then((data) => {
                console.log(data)
                resolve(data)
