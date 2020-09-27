@@ -124,7 +124,7 @@
                 no-data-text='No recent exception'
               >
                   <template v-slot:item.action="{ item }">
-                    <v-btn text  @click=" viewConfiguration(item.label)" style="border: 1px #13095e solid; color:#13095e" class="text-none mr-3" small>View</v-btn>
+                    <v-btn text  @click=" viewException(item.id)" style="border: 1px #13095e solid; color:#13095e" class="text-none mr-3" small>View</v-btn>
                    
                </template>
                 
@@ -345,7 +345,7 @@ export default {
           viewException(id){
             this.loading = true
             this.$router.push({ path: `/exceptionmanagement/${id}`})
-     this.$router.push({ path: "/exceptionmanagement/"})
+   //  this.$router.push({ path: "/exceptionmanagement/"})
           },
           deleteException(){
             this.deletedialog = true

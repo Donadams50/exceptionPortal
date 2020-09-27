@@ -68,17 +68,22 @@
         <span class="white--text">Exception Portal  </span>
       </v-toolbar-title>
       <v-spacer></v-spacer> 
-       <v-btn icon class="hidden-sm-and-down mr-5 white--text text-none">
-          Jessica Jones
+        
+       <v-btn text color="rgb(40, 31, 71)" class="hidden-sm-and-down  white--text text-none">
+          {{userdetails.user_NAME.S}}
         <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
-    <v-btn icon class=" hidden-sm-and-down ml-5 white--text text-none">
-          Admin
+      
+    <v-btn text color="rgb(40, 31, 71)" class=" hidden-sm-and-down  white--text text-none">
+          {{userdetails.user_ROLE.S}}
         <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
-      <v-btn icon class=" ml-5 white--text" router-link to="/login">
-        <v-icon>mdi-logout</v-icon> 
+      
+      <v-btn  text color="rgb(40, 31, 71)"  class="text-none  white--text" router-link to="/">  
+       Sign out
+        <v-icon>mdi-logout</v-icon>
       </v-btn>
+      
     </v-app-bar>
      <v-navigation-drawer  app clipped-left v-model="drawer" color="white" floating >     
           <v-layout column align-center>
@@ -120,7 +125,7 @@
                 </v-list-item-title>
               </v-item-content>
             </v-list-item>
-             <v-list-item router-link to="/users">
+             <v-list-item router-link to="/users" v-if="userdetails.user_ROLE.S==='admin'">
               <v-list-item-icon>
                 <v-icon color="rgb(40, 31, 71)">person</v-icon>
               </v-list-item-icon>
@@ -171,6 +176,13 @@ export default {
           
         }
   },
+  computed: {
+             userdetails(){
+    
+                       return this.$store.state.LOGIN_SUCCESS[0]
+                              }
+            
+                   },
    methods :{
        LogOut(){
 

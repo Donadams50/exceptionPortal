@@ -40,7 +40,7 @@
         Close
       </v-btn>
     </v-snackbar>
-    <v-form id="logform" >
+    <v-form ref="form" id="logform" >
       <div >
             <div id="loginheader">
              
@@ -48,9 +48,9 @@
             </div>
             <div id="loginfields">
                 <p style="text-align:left; color: white; font-family:Lato; margin-bottom:-1px">Email</p>
-                <v-text-field  v-model="userid"  style="border-radius:0px;" label="User Id" placeholder="Email" ></v-text-field>
+                <v-text-field :rules="[inputRule]" solo v-model="userId"  style="border-radius:0px;"  placeholder="Email" ></v-text-field>
                 <p style="text-align:left; color: white; font-family:Lato; margin-bottom:-1px">User name</p>
-                <v-text-field  v-model="name"  style="border-radius:0px;" label="User Id" placeholder="User name" ></v-text-field>
+                <v-text-field solo v-model="name"  :rules="[inputRule]" style="border-radius:0px;"  placeholder="User name" ></v-text-field>
 
                 <!-- <v-text-field v-model="password" style="border-radius:0px;" label="Password" :append-icon="show3 ? 'mdi-eye' :'mdi-eye-off'"
                  :rules="[rules.required, rules.min]"
@@ -85,6 +85,18 @@ export default {
 
    data () {
       return {
+        numberRule: val => {
+      if(val < 0 || val=== "") return 'Please enter a positive number'
+      return true
+    },
+      inputRule: val1 => {
+      if( val1 === "") return 'Field cannot be empty'
+      return true
+    },
+    emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
         loading: false,
            text: "",
       text1: "",
@@ -96,50 +108,69 @@ export default {
         y: 'top',
         name:"",  
         show3: false,
-        userid: '',
+        userId: '',
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 5 || 'Min 5 characters',
         },
       }
     },
-
+computed: {
+             userdetails(){
+    
+                       return this.$store.state.LOGIN_SUCCESS[0]
+                              }
+            
+                   },
     methods :{
        Login(){
+         if (this.$refs.form.validate()){
   this.loading = true
-     this.$router.push({ path: "/exceptionmanagement"})
+     
 //           let newLogin = {
 //         username :this.username,
 //         password: this.password,      
 //  }
+    let userId = this.userId
          
-//            this.$store.dispatch('Login', newLogin)
-//           .then((success)=>{
-//               console.log(success.data);
-//             this.loading= false;
-//                    this.$router.push({ path: "/dashboard"})
-             
-//           })
-//           .catch((error)=>{
+           this.$store.dispatch('Login', userId)
+          .then((success)=>{
+              console.log(success.data);
+                         
+            // alert(this.userId);
+              let newusid = this.$store.state.LOGIN_SUCCESS[0].user_ID.S;
+           //   alert(this.name);
+              let newusname= this.$store.state.LOGIN_SUCCESS[0].user_NAME.S;
+               this.loading= false;
+            if(this.userId === newusid && this.name === newusname ){
               
-//               console.log(error.response.data.errorMessage)
-//                //alert(error)
-//                if(error.response.status === 401){
-//                  console.log(error.response.status)
-//                  this.loading= false;
-//                this.text1 = "Invalid username or password"
-//                 this.snackbar1 = true
-//                }else{
-//                  this.loading= false;
-//                this.text1 = error.response.data.errorMessage
-//                 this.snackbar1 = true
-//                 // console.log(error.response.data.data)
-//                }
+               this.text ="Login succesful"
+                this.snackbar= true
+                   setTimeout(() => {
+        this.$router.push({
+         path: "/exceptionmanagement",
+        });
+      }, 3000)
+                //  this.$router.push({ path: "/exceptionmanagement"})
+            }else{
+                 this.text1 ="Invalid user id/ email"
+                this.snackbar1 = true
+            }
+                  
+             
+          })
+          .catch((error)=>{
+              alert(error)
                
-//           })
+                 this.loading= false;
+               this.text1 ="An error occurred"
+                this.snackbar1 = true
+              
+               
+          })
 
          
-               
+         }        
           }
       }   
  

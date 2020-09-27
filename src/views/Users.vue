@@ -4,7 +4,7 @@
                <v-snackbar
       v-model="snackbar"
       :bottom="y === 'bottom'"
-      :color="color"
+      :color="green"
       :left="x === 'left'"
       :multi-line="mode === 'multi-line'"
       :right="x === 'right'"
@@ -56,7 +56,7 @@
                 <v-card-actions>
 
                     <div class="mx-auto">
-                       <v-btn   class="text-center" :loading="loading"  rounded  @click="deleteDialog()">
+                       <v-btn   class="text-center" :loading="load"  rounded  @click="deleteDialog()">
                             <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
                                 Proceed  
                             </div>
@@ -64,6 +64,59 @@
                         
                     </div>
                 </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="newuseredit" width="500" persistent>
+            <v-card class="pa-12 mx-auto" id="login" max-width="500" elevation="7">
+                <v-system-bar light color="#ffffff" class="mt-n5">
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="newuseredit=false">
+                        <v-icon color="red">mdi-close</v-icon>
+                    </v-btn>
+                </v-system-bar>
+                 <div class="text-center text-h6   mt-5 mb-4" > Edit user details </div>
+                  <v-form ref="form">
+                <v-card-text>
+                 
+                     <v-row class="mx-1">
+              
+               <v-col cols="12" md="12">                
+                    <v-text-field  color="rgb(40, 31, 71)" prepend-inner-icon="person" :rules="[inputRule]" v-model="name" label="User name" filled></v-text-field>
+                       <v-text-field  prepend-inner-icon="email"   :rules='emailRules'   color="rgb(40, 31, 71)"   v-model="email" label="Email/User id"  filled></v-text-field>
+                      <v-select
+                      :rules="[v => !!v || 'Item is required']"
+                                 prepend-inner-icon="person"
+                                v-model="userType"
+                              :items="items"  
+                                item-value ="Type"
+                                item-text="Type"
+                                filled
+ 
+                              label="User role"
+                                   @input='RefreshTransaction'
+       
+                                      ></v-select>
+                      
+              </v-col>
+                
+               
+
+          </v-row>
+                 
+              
+                </v-card-text>
+                 <v-card-actions>
+
+                    <div class="mx-auto">
+                       <v-btn   class="text-center" :loading="loading1"  rounded  @click="updateUsers()">
+                            <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
+                                Submit  
+                            </div>
+                             </v-btn>
+                        
+                    </div>
+                </v-card-actions>
+                </v-form>
             </v-card>
         </v-dialog>
     <v-dialog v-model="newuser" width="500" persistent>
@@ -143,7 +196,7 @@
               
               <v-data-table
                 :headers="headers"
-                :items="desserts"
+                :items="allusers"
                 :search="searchWord"
                 no-data-text='No recent user'
               >
@@ -154,13 +207,13 @@
       <v-icon
         small
         class="mr-2"
-        @click="editBeneficiary(item)"
+        @click="editUser(item)"
       >
         mdi-pencil
       </v-icon>
       <v-icon
         small
-        @click="deleteUser(item)"
+        @click="deleteUsers(item)"
       >
         mdi-delete
       </v-icon>
@@ -181,84 +234,27 @@ export default {
       data(){
         
     return{
+      usid : '',
       newuser: false,
+      newuseredit: false,
       deletedialog: false,
       desserts: [
-            {
-             id: '001',
-            name: "Jerry Adams ",
-            userid: "jadams@gmail.com",
-            role: "Admin",
            
-            
-            
-          },
-           {
-             id: '002',
-            name: "Lincoln Bolt ",
-            userid: "linbolt@gmail.com",
-            role: "role_operations",
-          },
-            {
-            id: '003',
-            name: "Matt Florence ",
-            userid: "florence@gmail.com",
-            role: "role_developer",
-           
-            
-            
-          },
-           
-          {
-             id: '004',
-            name: "Ojo Shina ",
-            userid: "sumgo@gmail.com",
-            role: "Admin",
-           
-            
-            
-          },
-          {
-             id: '005',
-            name: "Alia Sholz ",
-            userid: "sholz@gmail.com",
-            role: "request_manager",
-           
-            
-            
-          },
-           
-             {
-            id: '006',
-            name: "Micheal Trolz ",
-            userid: "mic@gmail.com",
-            role: "Admin",
-            
-            
-          },
-             {
-          id: '007',
-            name: "Tunny Cruiz ",
-            userid: "tun@gmail.com",
-            role: "role_operations",
-            
-            
-          },
          
            
         ],
        headers: [
         
          
-        {
-         text: ' Id',
-          align: 'left',
-          sortable: false,
-          value: 'id',
-        },
-           { text: 'Name', value: 'name' },
-         { text: 'User id', value: 'userid' },
-          { text: 'Role ', value: 'role', sortable: false },
+        // {
+        //  text: ' Id',
+        //   align: 'left',
+        //   sortable: false,
+        //   value: 'id',
+        // },
+           { text: 'Name', value: 'user_NAME' },
+         { text: 'User id', value: 'user_ID' },
+          { text: 'Role ', value: 'user_ROLE', sortable: false },
           
            { text: '', value: 'action', sortable: false, }
 
@@ -267,6 +263,8 @@ export default {
     
        valid: true,
       loading: false,
+      loading1: false,
+      load: false,
        numberRule: val => {
       if(val < 0 || val=== "") return 'Please enter a positive number'
       return true
@@ -280,12 +278,15 @@ export default {
         v => /.+@.+/.test(v) || "E-mail must be valid"
       ],
     searchword:"",
+    ename:'',
+    eemail: '',
+    euserType: '',
        name:"",
        userType: '',
       email: "",
-       items: ['Admin', 'Role-operation', 'Role-developer', 'Request manager'],
-        text: "Succesfully Posted Manual credit ",
-      text1: " Manual credit not succesfull",
+       items: ['admin', 'role_operations', 'role_developer', 'exception_manager'],
+        text: " ",
+      text1: " ",
        modal: '',
         snackbar: false,
          snackbar1: false,
@@ -297,6 +298,29 @@ export default {
   
     }
   },
+  mounted () {    
+      
+       this.$store.dispatch('loadUsers')
+       .then(()=>{
+             console.log(this.$store.state.alUsers)
+          
+         })
+          .catch((error)=>{
+         
+              console.log(error)
+                 alert(error)
+              
+          }) 
+
+ 
+          },
+      computed: {
+             allusers(){
+    
+                       return this.$store.state.alUsers
+                              }
+            
+                   },
     methods: {
       newUser(){
        this.newuser = true
@@ -315,56 +339,71 @@ export default {
      $event.preventDefault();
      }
    },
+
+   updateUsers(){
+     if (this.$refs.form.validate()){
+       this.loading1 = true
+ let   body={
+
+            user_ID: this.email,
+            user_NAME: this.name,
+            user_ROLE: this.userType
+                  }
+                  console.log(body)
+                           
+           this.$store.dispatch('updateUserDetails', body)
+          .then((success)=>{
+              console.log(success.data);
+              this.loading1 = false;
+              this.$store.dispatch('loadUsers')
+            //  alert(success.data);
+            this.text = "User details  updated succesfully"
+               this.snackbar = true
+               this.email = ""
+               this.name= ""
+               this.userType = ""
+                this.newuseredit = false
+          
+              
+             
+          })
+          .catch((error)=>{
+            console.log("yee")
+              console.log(error)
+              this.loading1 = false;
+                alert(error)
+                this.text1 = "User details not updated succesfully"
+                this.snackbar1 = true
+          })
+     }
+
+   },
       addUser(){
 
                 if (this.$refs.form.validate()){
-                  alert("yes")}
-              },
-  
-      deleteUser(){
-                  this.deletedialog = true
-                },
- postManualCredit(){
-      //  alert(this.interswitchRef); 
-      if (this.$refs.form.validate()){
-          this.loading = true;
-             if(this.type === "Credit"){
-               this.source =  this.bank_name;
-                this.recipient = "ASTRA_PAY";
-                this.subtype= "MANUAL_CREDIT";
-                                    }
-               else if(this.type === "Debit"){
-               this.source =  "ASTRA_PAY";
-                this.recipient = this.bank_name;
-                 this.subtype= "MANUAL_DEBIT";
+                  //alert("yes")
+                  this.loading = true
+           let   body={
+
+            user_ID: this.email,
+            user_NAME: this.name,
+            user_ROLE: this.userType
                   }
-                //    alert(this.type);
-                //   alert(this.subtype);
-                // alert(this.recipient);
-                // alert(this.source);
-            
-          let newManualCredit = {
-                      interswitchRef : this.interswitchRef,
-                      amount: parseFloat(this.amount) * 100 ,
-                      subtype: this.subtype,
-                      extraInfo :this.extraInfo,
-                      type: this.type,
-                      source: this.source ,
-                      recipient: this.recipient,
-                      note:this.note
-                }
-         
-           this.$store.dispatch('postCredit', newManualCredit)
+                  console.log(body)
+                           
+           this.$store.dispatch('addUser', body)
           .then((success)=>{
               console.log(success.data);
               this.loading = false;
+              this.$store.dispatch('loadUsers')
             //  alert(success.data);
+            this.text = "User added succesfully"
                this.snackbar = true
-                this.amount = " ",
-                this.note =" ",
-                this.interswitchRef = " ",
-                this.bank_name = " "
-             this.$router.push({ path: "/transactions"})
+               this.email = ""
+               this.name= ""
+               this.userType = ""
+                this.newuser = false
+          
               
              
           })
@@ -373,9 +412,51 @@ export default {
               console.log(error)
               this.loading = false;
                 alert(error)
+                this.text1 = "User not succesfully"
                 this.snackbar1 = true
           })
-      }
+                  
+                  
+                  }
+              },
+  
+      deleteUsers(usidd){
+        //alert(usidd.user_ID)
+        this.usid = usidd.user_ID
+                  this.deletedialog = true
+                },
+           deleteDialog(){
+            // alert(this.usid)
+            this.load = true
+           this.$store.dispatch('deleteUser', this.usid)
+          .then((success)=>{
+              console.log(success.data);
+              this.load = false;
+              this.$store.dispatch('loadUsers')
+            //  alert(success.data);
+            this.text = "User deleted succesfully"
+               this.snackbar = true
+                this.newuser = false
+          
+              
+             
+          })
+          .catch((error)=>{
+            console.log("yee")
+              console.log(error)
+              this.load = false;
+                alert(error)
+                this.text1 = "User not deleted "
+                this.snackbar1 = true
+          })
+           } ,    
+ editUser(item){
+ // alert(item.user_ID) 
+   this.newuseredit = true
+        this.email = item.user_ID
+        this.name= item.user_NAME
+        this.userType = item.user_ROLE
+      
  }
     },
     

@@ -182,7 +182,7 @@
  <div class=" text-center ">
     <v-row  >
          <v-col cols="12"   md="12" sm="6" xs="6">
-            <v-btn :loading ="loading2"  class="text-center"  rounded  @click="changeStatus()">
+            <v-btn :loading ="loading2"  v-if="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'||this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'" class="text-center"  rounded  @click="changeStatus()">
                  <div style="font-size:13px;   text-align:right;" class="  mx-3 text-capitalize"> 
                                 Change 
                </div>
@@ -326,7 +326,9 @@ export default {
       ]
      
     }),
-    
+  
+            
+                  
     mounted() {
       // alert(this.trans)
       // alert(this.value)

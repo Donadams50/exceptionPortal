@@ -90,18 +90,18 @@ export default {
                
           }
       },
-   created: function () {
-    axios.interceptors.response.use(null, error => {
-      console.log(error.response)
-        if (error.response.status === 401) {
-          this.$store.dispatch('LogOut');
-         //  this.dialog = true;
-        this.$router.push('/')
-        }
+//    created: function () {
+//     axios.interceptors.response.use(null, error => {
+//       console.log(error.response)
+//         if (error.response.status === 401) {
+//           this.$store.dispatch('LogOut');
+//          //  this.dialog = true;
+//         this.$router.push('/')
+//         }
 
-        return Promise.reject(error);
-});
-}
+//         return Promise.reject(error);
+// });
+// }
 
 };
 </script>

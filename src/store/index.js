@@ -14,12 +14,9 @@ const vuexLocalStorage = new VuexPersist({
 
 export default new Vuex.Store({
   state: {
-    creditdashboard:{},
-    debitdashboard:{},
-    transactions:[],
-    data:[],
-    token: localStorage.getItem("token") ||"",
-    leadbalance:{}
+    alUsers:[],
+    LOGIN_SUCCESS: []
+   
 
   },
   plugins: [vuexLocalStorage.plugin],
@@ -28,70 +25,114 @@ export default new Vuex.Store({
   // },
   mutations: {
       // manual credit/debit
-      mutatePostCredit(state, data) {
-        state.data = data.data
+      mutateUser(state, mutateUser) {
+        state.mutateUser = mutateUser.data.Items
       
       },
-       //get all transaction
-       CONFIGURATIONTRANSACTIONS(state, transactions) {
-      state.transactions = transactions.data
-    },
-    //get the count for debit in a day
-    DebitDashboard(state, debitdashboard) {
-      state.debitdashboard = debitdashboard.data
-    },
-     //get the count for debit in a day
-    CreditDashboard(state, creditdashboard) {
-      state.creditdashboard = creditdashboard.data
-    },
-
-      // gets all categories
-      LOGIN_SUCCESS(state, data) {
-        state.data = data.data
-      //  console.log(state.componentItems)
+      alUsers(state, alUsers) {
+        state.alUsers = alUsers.data.Items
+      
       },
-
-      TOKEN (state, token){
-        state.token = token
+      
+      LOGIN_SUCCESS(state, LOGIN_SUCCESS) {
+        state.LOGIN_SUCCESS = LOGIN_SUCCESS.data.Items
+      
       },
-      leadBalance(state, data) {
-        state.leadbalance = data.data
-      },
+       
+     
 
   },
   actions: {
-     //to post a manual credit/debit
-    postCredit ({commit}, newManualCredit ) {
-      axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+     //to add mew user
+     addUser ({commit}, body ) {
+       //alert("body")
+     // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
         return new Promise ((resolve, reject)=>{
         axios
-          .post('/asteroid/webapi/secure/interswitch/lead_account/transactions' , newManualCredit)  
+          .post('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/' , body)  
           .then((data) => {
             console.log(data)
             resolve(data)
-           commit('mutatePostCredit', data)
+           commit('mutateUser', data)
               }) 
               .catch((error)=>{
-                
+                alert(error)
                 console.log(error)
                 reject(error)
                
               });
         });   
     },
+     //to add mew user
+  //    deleteUser ( {commit}, userId ) {
+  //     alert(userId)
+  //     console.log(userId)
+  //       return new Promise ((resolve, reject)=>{
+  //        axios
+  //       .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID='+userId+'')  
+  //     //   .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID=sumboma@gmail.com')  
+  //     //   // https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID=sumboma@gmail.com
+  //     //    .then((data) => {
+  //        console.log(data)
+  //          resolve(pay)
+  //          commit('mutateUser', data)
+  //            }) 
+  //            .catch((error)=>{
+  //              //alert(error)
+  //              console.log(error)
+  //              reject(error)
+              
+  //            });
+         
+  //  },
+   deleteUser ( {commit}, userId ) {
+    //alert("body")
+        // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+           return new Promise ((resolve, reject)=>{
+           axios
+             .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID='+userId+'')   
+             .then((data) => {
+               console.log(data)
+               resolve(data)
+             commit('mutateUser', data)
+                 }) 
+                 .catch((error)=>{
+                   alert(error)
+                   console.log(error)
+                   reject(error)
+                  
+                 });
+           });   
+       },
+   updateUserDetails ( {commit}, body ) {
+//alert("body")
+    // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+       return new Promise ((resolve, reject)=>{
+       axios
+         .post('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/' , body)  
+         .then((data) => {
+           console.log(data)
+           resolve(data)
+         commit('mutateUser', data)
+             }) 
+             .catch((error)=>{
+               alert(error)
+               console.log(error)
+               reject(error)
+              
+             });
+       });   
+   },
     //to get all transaction
-  loadTransactions ({ commit }, payload) {
-  //  alert(payload.from_date)
-  //   console.log(payload)
-    axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+    loadUsers ({ commit }) {
+  
     return new Promise ((resolve, reject)=>{
-     // serviceCharge = await axios.get(''+baseUrl+'/asteroid/webapi/3ptwebapp/service_charge?performed_by='+customerId+'&origin='+origin+'&amount='+amount+'' , {headers: headers})  
-     axios.get('/asteroid/webapi/secure/interswitch/lead_account/transactions?subtype='+payload.subtype+'&from_date='+payload.from_date+'&to_date='+payload.to_date+'' )  
-     //axios.get('/asteroid/webapi/secure/interswitch/lead_account/transactions' )  
+     axios.get('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/' )  
+     
     .then((data)=>{
       console.log(data)
       resolve(data)
-      commit('CONFIGURATIONTRANSACTIONS', data)
+      commit('alUsers', data)
     })
     .catch((error)=>{
       reject(error)
@@ -102,29 +143,25 @@ export default new Vuex.Store({
   
   },
    //to post Login to the database
- Login({commit}, newLogin ) { 
-  console.log(newLogin)
-   let data={}
+ Login({commit}, userId ) { 
+ // alert(userId)
+   
   return new Promise ((resolve, reject)=>{
   axios
-    .post('/asteroid/webapi/login', data,
-      {auth:{username:newLogin.username, password:newLogin.password}}) 
+    .get('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID='+userId+'') 
     .then((data) => {
-     const token  = data.data.token;
+  
      console.log(data)
-     console.log(token)
-     localStorage.setItem("token", token)
-     axios.defaults.headers.common['Token'] = localStorage.getItem("token") || token 
+   
+ //    axios.defaults.headers.common['Token'] = localStorage.getItem("token") || token 
     
           commit('LOGIN_SUCCESS', data)
-           commit('TOKEN', token)
+          
            resolve(data)
         }) 
-        .catch(function (response){
-       //   console.log(response)
-          localStorage.removeItem("token") // if the request fails, remove any possible user token if possible
-          reject(response)
-       
+        .catch((error)=>{
+          reject(error)
+           alert(error)
         });
   });   
 },
@@ -137,82 +174,8 @@ LogOut:()=>{
 //alert("finish");
 },
 
- //to get the balance of lead account
- loadLeadAccount ({ commit }) {
-   
-  axios.defaults.headers.common['Token'] = localStorage.getItem("token")
-  return new Promise ((resolve, reject)=>{
-  axios.get('/asteroid/webapi/secure/interswitch/lead_account/balance' )
-  .then((data)=>{
-    console.log(data)
-    resolve(data)
-    commit('leadBalance', data)
-  })
-  .catch((error)=>{
-    reject(error)
-    // alert(error)
-  });
-   
-    });
 
-},
-  //to get THE COUNT OF AL DEBIT IN A DAY
-  loadDebitDashboard ({ commit }) {
-    var today = new Date();
-    var timestamp=new Date(today).getTime();
-      var todate=new Date(timestamp).getDate();
-      var tomonth=new Date(timestamp).getMonth()+1;
-      var toyear=new Date(timestamp).getFullYear();
-      var Start_Date =  toyear+'-'+tomonth+'-'+todate
-    //alert(Start_Date)
-     axios.defaults.headers.common['Token'] = localStorage.getItem("token")
-     return new Promise ((resolve, reject)=>{
-     
-    axios.get('/asteroid/webapi/secure/interswitch/lead_account/transactions/count?type=DEBIT&from_date='+Start_Date+'&to_date='+Start_Date+' ' )  
-    //  axios.get('/asteroid/webapi/secure/interswitch/lead_account/transactions/count?type="DEBIT"' ) 
-     .then((data)=>{
-       console.log(data)
-       resolve(data)
-       commit('DebitDashboard', data)
-     })
-     .catch((error)=>{
-       reject(error)
-       // alert(error)
-     });
-      
-       });
-   
-   },
-    //to get all transaction
-  loadCreditDashboard ({ commit }) {
-  
-    var today = new Date();
-    var timestamp=new Date(today).getTime();
-      var todate=new Date(timestamp).getDate();
-      var tomonth=new Date(timestamp).getMonth()+1;
-      var toyear=new Date(timestamp).getFullYear();
-      var Start_Date = toyear+'-'+tomonth+'-'+todate
-   // alert(Start_Date)
-    axios.defaults.headers.common['Token'] = localStorage.getItem("token")
-    return new Promise ((resolve, reject)=>{
-     // serviceCharge = await axios.get(''+baseUrl+'/asteroid/webapi/3ptwebapp/service_charge?performed_by='+customerId+'&origin='+origin+'&amount='+amount+'' , {headers: headers})  
-    axios.get('/asteroid/webapi/secure/interswitch/lead_account/transactions/count?type=CREDIT&from_date='+Start_Date+'&to_date='+Start_Date+' ' ) 
-    // axios.get('/asteroid/webapi/secure/interswitch/lead_account/transactions/count?type="CREDIT"' )
-    
-     //axios.get('/asteroid/webapi/secure/interswitch/lead_account/transactions' )  
-    .then((data)=>{
-      console.log(data)
-      resolve(data)
-      commit('CreditDashboard', data)
-    })
-    .catch((error)=>{
-      reject(error)
-      // alert(error)
-    });
-     
-      });
-  
-  }
+
 
   },
 
