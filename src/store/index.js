@@ -15,7 +15,12 @@ const vuexLocalStorage = new VuexPersist({
 export default new Vuex.Store({
   state: {
     alUsers:[],
-    LOGIN_SUCCESS: []
+    LOGIN_SUCCESS: [],
+    allException: [],
+    myException: [],
+    myExceptionReal: [],
+    singleRequest: [],
+    history: []
    
 
   },
@@ -38,7 +43,33 @@ export default new Vuex.Store({
         state.LOGIN_SUCCESS = LOGIN_SUCCESS.data.Items
       
       },
-       
+      
+      allException(state, allException) {
+            let array = allException.data
+      for (let i = 0; i < array.length; i++) {
+        array[i].role = state.LOGIN_SUCCESS[0].user_ROLE.S
+      }
+        state.allException = array
+
+      },
+      
+      myException(state, myException) {
+        
+         
+     
+        state.myException = myException
+      
+      },
+      
+      singleRequest(state, singleRequest) {
+        state.singleRequest = singleRequest.data
+      
+      },
+      
+      history(state, history) {
+        state.history = history.data
+      
+      },
      
 
   },
@@ -134,6 +165,121 @@ export default new Vuex.Store({
       console.log(data)
       resolve(data)
       commit('alUsers', data)
+    })
+    .catch((error)=>{
+      reject(error)
+      // alert(error)
+    });
+     
+      });
+  
+  },
+   //to get all transaction
+   loadallException ({ commit }) {
+  
+    return new Promise ((resolve, reject)=>{
+     axios.get('https://aynuytxoo3.execute-api.us-east-1.amazonaws.com/Test/' )  
+     
+    .then((data)=>{
+   //   console.log(data)
+      resolve(data)
+      commit('allException', data)
+    })
+    .catch((error)=>{
+      reject(error)
+      // alert(error)
+    });
+     
+      });
+  
+  },
+  
+   //to get all transaction
+   loadMyException ({ commit }, userId) {
+   
+    return new Promise ((resolve, reject)=>{
+     axios.get('https://aynuytxoo3.execute-api.us-east-1.amazonaws.com/Test/?SearchKey=RequestorID&SearchValue='+userId+'' )  
+     
+    .then((data)=>{
+      console.log('first')
+      
+
+       resolve(data)
+     
+     let array = data.data
+            console.log(array.length)
+      let emptyObject = {
+          
+        }
+        let emptyArray = []
+      
+      for (let i = 0; i < array.length; i++) {
+        
+       emptyObject.RequestID = array[i].RequestID.S
+        emptyObject.ExceptionType = array[i].ExceptionType.S
+         emptyObject.RequestorName = array[i].RequestorName.S
+         emptyObject.Division = array[i].Division.S
+         emptyObject.ApplicationCode = array[i].ApplicationCode.S
+         emptyObject.ExceptionLifetime = array[i].ExceptionLifetime.S
+         emptyObject.RequestStatus = array[i].RequestStatus.S
+      
+         emptyArray.push(emptyObject)
+        
+      }
+    //  console.log(emptyArray)
+    // console.log(this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S)
+     // commit('myException', data)
+      commit('myException', emptyArray)
+    })
+    .catch((error)=>{
+      reject(error)
+      // alert(error)
+    });
+     
+      });
+  
+  },
+
+    loadSingleRequest ({ commit }, requestId) {
+   
+    return new Promise ((resolve, reject)=>{
+     axios.get('https://aynuytxoo3.execute-api.us-east-1.amazonaws.com/Test/?SearchKey=RequestID&SearchValue='+requestId+'' )  
+     
+    .then((data)=>{
+     // console.log('second')
+      
+
+       resolve(data)
+     
+    
+    
+      commit('singleRequest', data)
+    })
+    .catch((error)=>{
+      reject(error)
+      // alert(error)
+    });
+     
+      });
+  
+  },
+  //
+    loadHistory ({ commit }, requestId) {
+   
+    return new Promise ((resolve, reject)=>{
+     axios.get('https://d9ntc5522m.execute-api.us-east-1.amazonaws.com/Test/?RequestID='+requestId+'' )  
+     
+    .then((data)=>{
+      console.log('second')
+      console.log(data)
+
+      
+
+       resolve(data)
+     
+    
+    
+      commit('history', data)
     })
     .catch((error)=>{
       reject(error)

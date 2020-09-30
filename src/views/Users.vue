@@ -82,7 +82,7 @@
               
                <v-col cols="12" md="12">                
                     <v-text-field  color="rgb(40, 31, 71)" prepend-inner-icon="person" :rules="[inputRule]" v-model="name" label="User name" filled></v-text-field>
-                       <v-text-field  prepend-inner-icon="email"   :rules='emailRules'   color="rgb(40, 31, 71)"   v-model="email" label="Email/User id"  filled></v-text-field>
+                       <!-- <v-text-field  readonly prepend-inner-icon="email"   :rules='emailRules'   color="rgb(40, 31, 71)"   v-model="email" label="Email/User id"  filled></v-text-field> -->
                       <v-select
                       :rules="[v => !!v || 'Item is required']"
                                  prepend-inner-icon="person"

@@ -91,13 +91,13 @@
         </v-toolbar>     
        <v-data-table
                 :headers="headers"
-                :items="desserts2"
+                :items="myException"
                 :search="searchWord1"
                 no-data-text='No recent exception'
               >
                   <template v-slot:item.action="{ item }">
-                    <v-btn text  @click=" viewException(item.id)" style="border: 1px #13095e solid; color:#13095e" class="text-none mr-3" small>View</v-btn>
-                    <v-btn text  @click=" deleteException(item.id)" style="border: 1px #13095e solid; color:#13095e" class="text-none" small>Delete</v-btn>
+                    <v-btn text  @click=" viewException(item.RequestID)" style="border: 1px #13095e solid; color:#13095e" class="text-none mr-3" small>View</v-btn>
+                    <v-btn text  v-if="item.RequestStatus==='Awaiting-Review'" @click=" deleteException(item.RequestID)" style="border: 1px #13095e solid; color:#13095e" class="text-none" small>Delete</v-btn>
                </template>
                 
               </v-data-table>
@@ -112,23 +112,23 @@
        <div>  </div>
                 <v-spacer></v-spacer>
                 <div  class="primary--text">
-                  <v-text-field class=" mr-7 ml-3 primary--text" color="primary" placeholder="Search for transaction" v-model="searchWord" @keyup="searchComponent()" prepend-inner-icon="mdi-magnify" ></v-text-field>
+                  <v-text-field class=" mr-7 ml-3 primary--text" color="primary" placeholder="Search for exception" v-model="searchWord" @keyup="searchComponent()" prepend-inner-icon="mdi-magnify" ></v-text-field>
                 </div>
     </v-toolbar>
 
-     
-         <v-data-table
-                :headers="headers"
-                :items="desserts"
+      <v-data-table
+                :headers="headers1"
+                :items="allException"
                 :search="searchWord"
                 no-data-text='No recent exception'
               >
                   <template v-slot:item.action="{ item }">
-                    <v-btn text  @click=" viewException(item.id)" style="border: 1px #13095e solid; color:#13095e" class="text-none mr-3" small>View</v-btn>
-                   
+                    <v-btn text  @click=" viewExceptionRead(item.RequestID)" style="border: 1px #13095e solid; color:#13095e" class="text-none mr-3" small>View</v-btn>
+                    <v-btn text v-if="item.role==='admin'" @click="deleteException(item.RequestID)" style="border: 1px #13095e solid; color:#13095e" class="text-none" small>Delete</v-btn>
                </template>
                 
               </v-data-table>
+        
         
               
       </v-tab-item>
@@ -182,38 +182,7 @@ export default {
   components: {
         Navbar
     },
-     mounted () {
-      this.$store.dispatch('loadLeadAccount')  
-        this.$store.dispatch('loadDebitDashboard') 
-          this.$store.dispatch('loadCreditDashboard')   
-          var today = new Date();
-    var timestamp=new Date(today).getTime();
-      var todate=new Date(timestamp).getDate();
-      var tomonth=new Date(timestamp).getMonth()+1;
-      var toyear=new Date(timestamp).getFullYear();
-      var Start_Date =  toyear+'-'+tomonth+'-'+todate
-    //alert(Start_Date)
-          let payload = {
-                      from_date: Start_Date,
-                      to_date: Start_Date ,
-                       subtype: " "                               
-                  }
-                  
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-             
-          })
-          .catch((error)=>{
-            console.log("yee")
-              console.log(error)
-                // alert(error)
-              
-          }) 
-    },
+     
 
      computed: {
         
@@ -230,123 +199,108 @@ export default {
          text: 'Exception id',
           align: 'left',
           sortable: false,
-          value: 'id',
+          value: 'RequestID',
         },
-           { text: 'Exception type', value: 'type' },
-         { text: 'Requestor', value: 'requestor' },
-          { text: 'Division', value: 'division', sortable: false },
-          { text: 'App Code', value: 'appCode' },
+           { text: 'Exception type', value: 'ExceptionType' },
+         { text: 'Requestor', value: 'RequestorName' },
+          { text: 'Division', value: 'Division', sortable: false },
+          { text: 'App Code', value: 'ApplicationCode' },
           
-          { text: 'Exception Lifetime', value: 'expiration' },
-          { text: 'Status', value: 'status' },
+          { text: 'Exception Lifetime', value: 'ExceptionLifetime' },
+          { text: 'Status', value: 'RequestStatus' },
             { text: '', value: 'action', sortable: false, }
         ],
+         headers1: [
+         
+        {
+         text: 'Exception id',
+          align: 'left',
+          sortable: false,
+          value: 'RequestID',
+        },
+           { text: 'Exception type', value: 'ExceptionType' },
+         { text: 'Requestor', value: 'RequestorName' },
+          { text: 'Division', value: 'Division', sortable: false },
+        
+          
+          { text: 'Exception Lifetime', value: 'ExceptionLifetime' },
+          { text: 'Status', value: 'RequestStatus' },
+            { text: '', value: 'action', sortable: false, }
+        ],
+       
          desserts: [
-           {
-             id: 'EXP001',
-             type: 'Platform',
-             requestor: 'Williams Tunnny',
-             division: ' Div B',
-             appCode: 'app4500',
-             expiration: '29-09-2020',
-             status: 'Approved' 
-           },
-           {
-             id: 'EXP002',
-              type: 'Platform',
-             requestor: 'James Rodiquez',
-             division: ' Div C',
-             appCode: 'app67430',
-             expiration: '27-09-2020',
-             status: 'Removed' 
-           },
-           {
-             id: 'EXP003',
-              type: 'Security',
-             requestor: 'Adams Smith',
-             division: ' Div A',
-             appCode: 'app7550',
-             expiration: '28-09-2020',
-             status: 'Awaiting ' 
-           },
-           {
-             id: 'EXP004',
-              type: 'Security',
-             requestor: 'Adele Johnson',
-             division: ' Others',
-             appCode: 'app1500',
-             expiration: '28-05-2020',
-             status: 'Rejected' 
-           },
-           {
-             id: 'EXP005',
-              type: 'Platform',
-             requestor: 'Oriamo Penz',
-             division: ' Div B',
-             appCode: 'app9000',
-             expiration: '29-05-2020',
-             status: 'Implemented' 
-           }
+           
               
 
         ],
         desserts2: [
-           {
-             id: 'EXP001',
-             type: 'Platform',
-             requestor: 'Williams Tunnny',
-             division: ' Div B',
-             appCode: 'app4500',
-             expiration: '29-09-2020',
-             status: 'Approved' 
-           },
-           {
-             id: 'EXP002',
-              type: 'Platform',
-             requestor: 'Williams Tunnny',
-             division: ' Div C',
-             appCode: 'app67430',
-             expiration: '27-09-2020',
-             status: 'Removed' 
-           },
-           {
-             id: 'EXP003',
-              type: 'Security',
-             requestor: 'Williams Tunnny',
-             division: ' Div A',
-             appCode: 'app7550',
-             expiration: '28-09-2020',
-             status: 'Awaiting ' 
-           },
-           {
-             id: 'EXP004',
-              type: 'Security',
-             requestor: 'Williams Tunnny',
-             division: ' Others',
-             appCode: 'app1500',
-             expiration: '28-05-2020',
-             status: 'Rejected' 
-           },
-           {
-             id: 'EXP005',
-              type: 'Platform',
-             requestor: 'Williams Tunnny',
-             division: ' Div B',
-             appCode: 'app9000',
-             expiration: '29-05-2020',
-             status: 'Implemented' 
-           }
-              
+          
 
         ]
       }
     },
+    mounted () { 
+      let userId =  this.$store.state.LOGIN_SUCCESS[0].user_ID.S
+   
+           this.$store.dispatch('loadallException')
+       .then(()=>{
+             console.log(this.$store.state.allException)
+          
+         })
+          .catch((error)=>{
+         
+              console.log(error)
+                 alert(error)
+              
+          }) 
+          
+            this.$store.dispatch('loadMyException', userId)
+       .then(()=>{
+            // console.log(this.$store.state.myException)
+          
+         })
+          .catch((error)=>{
+         
+              console.log(error)
+                 alert(error)
+              
+          }) 
+   
+      
+       
+
+ 
+          },
+          computed: {
+             allException(){
+    
+                       return this.$store.state.allException
+                              },
+
+             myException(){
+    
+                       return this.$store.state.myException
+                              }
+            
+                   },
     methods:{
           viewException(id){
             this.loading = true
             this.$router.push({ path: `/exceptionmanagement/${id}`})
    //  this.$router.push({ path: "/exceptionmanagement/"})
           },
+           viewExceptionRead(id){
+             this.loading = true
+             if(this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'){
+           
+            this.$router.push({ path: `/exceptionmanagement/${id}`})
+             }else{
+                
+            this.$router.push({ path: `/exceptionmanagementread/${id}`})
+             }
+   //  this.$router.push({ path: "/exceptionmanagement/"})
+          },
+          
           deleteException(){
             this.deletedialog = true
           }

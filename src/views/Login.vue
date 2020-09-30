@@ -48,19 +48,11 @@
             </div>
             <div id="loginfields">
                 <p style="text-align:left; color: white; font-family:Lato; margin-bottom:-1px">Email</p>
-                <v-text-field :rules="[inputRule]" solo v-model="userId"  style="border-radius:0px;"  placeholder="Email" ></v-text-field>
+                <v-text-field :rules='emailRules' solo v-model="userId"  style="border-radius:0px;"  placeholder="Email" ></v-text-field>
                 <p style="text-align:left; color: white; font-family:Lato; margin-bottom:-1px">User name</p>
                 <v-text-field solo v-model="name"  :rules="[inputRule]" style="border-radius:0px;"  placeholder="User name" ></v-text-field>
 
-                <!-- <v-text-field v-model="password" style="border-radius:0px;" label="Password" :append-icon="show3 ? 'mdi-eye' :'mdi-eye-off'"
-                 :rules="[rules.required, rules.min]"
-                 :type="show3 ? 'text' : 'password'"
-            name="input-10-2"
-            hint="At least 5 characters"
-            value=""
-            class="input-group--focused"
-            @click:append="show3 = !show3"
-                placeholder="Your Password" ></v-text-field> -->
+               
                 <p style="text-align:right; color: black; font-size: 12px; font-weight: 200px; font-family:Lato; margin-top:-20px">Forgot Password?</p>
             </div>
             <div id="loginbutton">   
@@ -148,7 +140,7 @@ computed: {
                 this.snackbar= true
                    setTimeout(() => {
         this.$router.push({
-         path: "/exceptionmanagement",
+         path: "/home",
         });
       }, 3000)
                 //  this.$router.push({ path: "/exceptionmanagement"})

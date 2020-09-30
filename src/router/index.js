@@ -40,6 +40,20 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/ViewExceptionRequest.vue")
       
+  },
+   {
+    path: "/exceptionmanagementread/:id",
+    name: "ViewExceptionReadOnly",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/ViewExceptionReadOnly.vue")
+      
+  },
+  {
+    path: "/home",
+    name: "Home",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Home.vue")
+      
   }
 ];
 
