@@ -1,6 +1,46 @@
 <template>
     <div id="rollover">
          <Navbar/>
+          <v-snackbar
+      v-model="snackbar"
+      :bottom="y === 'bottom'"
+      :color="green"
+      :left="x === 'left'"
+      :multi-line="mode === 'multi-line'"
+      :right="x === 'right'"
+      :timeout="timeout"
+      :top="y === 'top'"
+      :vertical="mode === 'vertical'"
+    >
+      {{ text }}
+      <v-btn
+        color="green"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+     <v-snackbar
+      v-model="snackbar1"
+      :bottom="y === 'bottom'"
+      :color="color"
+      :left="x === 'left'"
+      :multi-line="mode === 'multi-line'"
+      :right="x === 'right'"
+      :timeout="timeout"
+      :top="y === 'top'"
+      :vertical="mode === 'vertical'"
+    >
+      {{ text1 }}
+      <v-btn
+        color="red"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
          <v-dialog v-model="changestatus" width="500" persistent>
            <v-card class="pa-12 mx-auto" id="login" max-width="500" elevation="7">
               <v-system-bar light color="#ffffff" class="mt-n5">
@@ -17,7 +57,7 @@
                         <v-col cols="12" md="12">                
                             <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Status</p>
                               <v-select
-       v-model="sta"
+       v-model="getRequest.RequestStatus.S"
        :items="itemssta"  
         item-value ="Type"
          item-text="Type"
@@ -29,13 +69,13 @@
        
       ></v-select>
                                <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Comment</p>
-                            <v-textarea    color="rgb(40, 31, 71)"   v-model="email"  filled></v-textarea>                       
+                            <v-textarea  :rules="[inputRule]"  color="rgb(40, 31, 71)"   v-model="comment2"  filled></v-textarea>                       
                         </v-col>
                       </v-row> 
                     </v-card-text>
                      <v-card-actions>
                         <div class="mx-auto">
-                          <v-btn   class="text-center" :loading="loading"  rounded  @click="addUser()">
+                          <v-btn   class="text-center"  :loading="loading6"  rounded  @click="finalChangeStatus()">
                              <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
                                 Change  
                              </div>
@@ -46,10 +86,48 @@
             </v-card>
         </v-dialog>
   <!-- end of dialog -->
+  <!-- coment -->
+ <v-dialog v-model="commentchange" width="500" persistent>
+           <v-card class="pa-12 mx-auto" id="login" max-width="500" elevation="7">
+              <v-system-bar light color="#ffffff" class="mt-n5">
+                <v-spacer></v-spacer>
+                    <v-btn icon @click="commentchange=false">
+                        <v-icon color="red">mdi-close</v-icon>
+                     </v-btn>
+                </v-system-bar>
+                <div class="text-center text-h6   mt-5 mb-4" > Comment the changes you made </div>
+                <v-form ref="form">
+                   <v-card-text>
+                 
+                      <v-row class="mx-1">   
+                        <v-col cols="12" md="12">                
+                        
+                               <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Comment</p>
+                            <v-textarea   :rules="[inputRule]" color="rgb(40, 31, 71)"   v-model="comment1"  filled></v-textarea>                       
+                        </v-col>
+                      </v-row> 
+                    </v-card-text>
+                     <v-card-actions>
+                        <div class="mx-auto">
+                          <v-btn   class="text-center" :loading="loading5"  rounded  @click="finalChange()">
+                             <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
+                                Change  
+                             </div>
+                            </v-btn>                        
+                        </div>
+                     </v-card-actions>
+                </v-form>
+            </v-card>
+        </v-dialog>
+  <!-- comment -->
           <v-card class="mx-5 mt-3">
-           
+            <div style="text-align:left ;font-weight:bold; font-size: 30px">
+               <v-btn  router-link to="/exceptionmanagement" icon class="hidden-xs-only">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+      </div>
               <v-card-title>
-               
+              
                     <div class="text-h6 my-2 ml-1 "> View request</div>
                     <v-spacer> </v-spacer>
                     
@@ -66,15 +144,15 @@
                 
                 
                   <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Exception id</p>
-                <v-text-field readonly solo v-model="eid"  style="border-radius:0px;" placeholder="Exception id" ></v-text-field>
+                <v-text-field readonly :rules="[inputRule]" solo v-model="getRequest.RequestID.S"  style="border-radius:0px;" placeholder="Exception id" ></v-text-field>
                    
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Exception type</p>
                       <v-select
-       v-model="etype"
+       v-model="getRequest.ExceptionType.S"
        :items="items"  
         item-value ="Type"
          item-text="Type"
-            readonly
+          readonly
          class=" primary--text" color="primary"
          :rules="[v => !!v || 'Item is required']"
         solo
@@ -90,12 +168,11 @@
         transition="scale-transition"
         color="primary"
         offset-y
-        readonly
         min-width="290px"
       >
         <template v-slot:activator="{ on }">
           <v-text-field
-            v-model="fromdate"
+            v-model="getRequest.ExceptionLifetime.S"
            solo
             
             readonly
@@ -104,39 +181,43 @@
           ></v-text-field>
         </template>
         <v-date-picker
-        readonly
-          v-model="fromdate" 
+          v-model="getRequest.ExceptionLifetime.S" 
          @input="pickdate"
+         readonly
         >       
         </v-date-picker>
         
       </v-menu>
         <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Requestor</p>
-                <v-text-field readonly solo  v-model="erequestor"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
+                <v-text-field readonly readonly solo :rules="[inputRule]" v-model="getRequest.RequestorName.S"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Department </p>
-                <v-text-field readonly solo v-model="edepartment"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.Department.S"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
                      
                    
                      <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application code</p>
-                <v-text-field readonly solo  v-model="eacode"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
-                  <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application number</p>
-                <v-text-field readonly solo  v-model="eanumber"  style="border-radius:0px;" placeholder="Application number" ></v-text-field>
-                    
+                <v-text-field  readonly solo :rules="[inputRule]"  v-model="getRequest.ApplicationCode.S"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
+                 
                    <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Description</p>
-                <v-text-field readonly solo  v-model="edescription"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                <v-text-field readonly solo :rules="[inputRule]"  v-model="getRequest.Description.S"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                 <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Comments </p>
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.Comments.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+                 <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Aws account </p>
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.AwsAccount.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>        
+                     
+                
                 </v-col>
    <v-col cols="12" md="5">
                
      <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Business need</p>
-     <v-text-field  readonly solo v-model="ebusinessneed"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
+     <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.BusinessNeed.S"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
                     
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Division</p>
                       <v-select
-       v-model="edivision"
+       v-model="getRequest.Division.S"
        :items="items1"  
         item-value ="Type"
          item-text="Type"
-        readonly
+          readonly
          class=" primary--text" color="primary"
          :rules="[v => !!v || 'Item is required']"
         solo
@@ -145,11 +226,11 @@
       ></v-select>
         <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Risk level</p>
                       <v-select
-       v-model="erisklevel"
+       v-model="getRequest.RiskLevel.S"
        :items="items2"  
         item-value ="Type"
          item-text="Type"
-            readonly
+        readonly
          class=" primary--text" color="primary"
          :rules="[v => !!v || 'Item is required']"
         solo
@@ -157,18 +238,17 @@
        
       ></v-select>
        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Rationale</p>
-                <v-text-field readonly solo  v-model="erationale"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.Rationale.S"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Impacted rules </p>
-                <v-text-field  readonly solo v-model="eimpactedrules"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.ImpactedRules.S"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
              <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman </p>
-                <v-text-field solo v-model="exman"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.xmanID.S"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
                      
           <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Back to normal state  </p>
-                <v-text-field readonly solo v-model="ebtns"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.BackToNormalState.S"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
                  <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Mitigation </p>
-                <v-text-field readonly solo v-model="emitigation"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>        
-                     
-                
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.Mitigation.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+              
                   
                 </v-col>
                    <v-col cols="12" md="3" lg="3" xl="3" sm="12">
@@ -176,35 +256,18 @@
            <div style="display:flex;  font-size:20px  "  >
           
           <p style=" font-size:25px font-weight:bold ; margin-top:10px"  class=" ml-2 "> Status :  </p>
-          <p  class=" ml-5 " style="font-size:15px  ; margin-top:10px "> Approved  </p>
+          <p  class=" ml-3 " style="font-size:15px  ; margin-top:10px "> {{getRequest.RequestStatus.S}}  </p>
     
       </div>
        
 
- <!-- <div class=" text-center ">
-    <v-row  >
-         <v-col cols="12"   md="12" sm="6" xs="6">
-            <v-btn :loading ="loading2"  v-if="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'||this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'" class="text-center"  rounded  @click="changeStatus()">
-                 <div style="font-size:13px;   text-align:right;" class="  mx-3 text-capitalize"> 
-                                Change 
-               </div>
-            </v-btn>
-         </v-col>
-        
-    </v-row>
- </div> -->
+ <div class=" text-center ">
+   
+ </div>
  </v-card>
                    </v-col>    
               </v-row>
-                 <!-- <v-row class="text-center">
-             <v-col cols="12" md="8">
-              <div  style=" " class="text-center ">
-               <v-btn  rounded class="text-none" :loading ="loading" rounde @click="submit()"    >
-                   Update</v-btn >
-                  </div> 
-                  </v-col>    
-                          
-                  </v-row> -->
+                
                </v-form> 
                
             </v-card-text>
@@ -213,7 +276,7 @@
 
   <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6">
 
-    <div style=" font-size: 20px "  class="text-h6 mt-5 "> Change History Log</div>
+    <div class="text-h6 mt-5 " style="font-size:20px ; font-weight: bold"> Request History </div>
      <v-expansion-panels class="mt-5" accordion>
      <v-expansion-panel>
         <v-expansion-panel-header disable-icon-rotate>
@@ -223,12 +286,13 @@
           </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
+           <div v-if="getHistory.length=== 0" class="text-h6 mt-5 " style="font-size:20px ; font-weight: bold"> No History </div>
           <v-timeline class="mt-5 ml-15" dense clipped>
      
 
      
       <v-timeline-item 
-        v-for="(item, i) in items4"
+        v-for="(item, i) in getHistory"
         :key="i"
         :color="primary"
         class="mb-2"  
@@ -236,11 +300,11 @@
         fill-dot
         small
       >
-        <v-row  no-gutters style="">
-          <v-col cols="12" style="">{{item.status}}</v-col>
+        <v-row  style="">
+          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -10px">Update by:</v-col>  <v-col cols="6" style="margin-left: -10px">{{item.update_champion.S}}</v-col>
           <!-- <v-col cols="12" style="margin-top:-10px">{{item.status}} </v-col> -->
-           <v-col  cols="12">{{item.date}} </v-col>
-            <v-col  cols="12">{{item.comment}} </v-col>
+          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -10px">Comment:</v-col>  <v-col cols="6" style="margin-left: -5px">{{item.comment.S}}</v-col>
+            <v-col no-gutters  cols="6" style="font-weight: bold;margin-left: -10px">Date:</v-col>  <v-col cols="6" style="margin-left: -20px">{{item.date_timestamp.S}}</v-col>
         </v-row>
       </v-timeline-item>
 
@@ -267,9 +331,22 @@ export default {
     },
 
     data: () => ({
+       numberRule: val => {
+      if(val < 0 || val=== "") return 'Please enter a positive number'
+      return true
+    },
+      inputRule: val1 => {
+      if( val1 === "") return 'Field cannot be empty'
+      return true
+    },
+    emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
         sta: 'Implemented',
          changestatus: false,
-        itemssta: [ 'Awaiting review', 'Approved', 'Rejected', 'Implemented', 'Deprecated'],
+         commentchange: false,
+        itemssta: [ 'Awaiting-Review', 'Approved', 'Rejected', 'Implemented', 'Deprecated'],
         ebusinessneed: 'lifting of truck',
         eid: "EXP0002",
         etype: 'Platform',
@@ -284,10 +361,10 @@ export default {
         emitigation: 'Experienced',
         eimpactedrules: 'A very longrules',
         exman: 'Block diagram',
-      items1: [ 'Div A', 'Div B', 'Div C', 'Othhers' ],
-      items2: ['Not assesed', 'Low', 'Medium', 'High', 'Critical'],
+      items1: [ 'Div A', 'Div B', 'Div C', 'Aircraft' ],
+      items2: ['Not Assessed', 'Low', 'Medium', 'High', 'Critical'],
       text: " ",
-      text1: " Manual credit not succesfull",
+      text1: "",
       fromdate: new Date().toISOString().substr(0, 10),
       todate: new Date().toISOString().substr(0, 10),
       menu2: false,
@@ -297,34 +374,19 @@ export default {
       snackbar1: false,
       timeout: 6000,
       transtype:'',
+      comment1: '',
+      comment2: '',
       items: ['Platform', 'Security', ],
        mode: '',
         x: null,
         y: 'top',
       dialog: false,
        dialog1: false,  
+       loading5: false,
+       loading6: false,
       desserts: [],
       items4: [
-          {
-            status: 'Awaiting review',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          },
-           {
-            status: 'Approved',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          },
-           {
-            status: 'Implemented',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          },
-           {
-            status: 'Deprecated',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          }
+          
       ]
      
     }),
@@ -334,105 +396,56 @@ export default {
     mounted() {
       // alert(this.trans)
       // alert(this.value)
-      if(this.trans === "All"){
-        let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate,
-                      subtype: ''                                
-                  }
-                  
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-             
-          })
+          
+      
+//           //alert(requestid)
+        
+ if(this.$store.state.LOGIN_SUCCESS.length > 0){
+     let  requestid = this.$route.params.id
+          this.$store.dispatch('loadHistory', requestid)
+       .then(()=>{
+         console.log("OH")
+             console.log(this.$store.state.history)
+          
+         })
           .catch((error)=>{
-            console.log("yee")
+         
               console.log(error)
-                // alert(error)
+                 alert(error)
               
-          })
-      }
-      else{
-let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate,
-                      subtype: this.trans                 
-            }
-            
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-             
-          })
+          }) 
+          
+   this.$store.dispatch('loadSingleRequest', requestid)  
+       .then(()=>{
+//         if(this.$store.state.LOGIN_SUCCESS[0].user_ID.S===this.$store.state.singleRequest[0].RequestorID.S || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'|| this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'){
+//              console.log("Welcome")
+//              console.log(this.$store.state.singleRequest)
+//               } else{
+// this.$router.push({
+//          path: "/",
+//         })
+//     } 
+          
+         })
           .catch((error)=>{
-            console.log("yee")
+         
               console.log(error)
-                // alert(error)
+                 alert(error)
               
-          })
-}
+          }) 
+      
+ }
 
      
     },
 
     computed: {
-   headers() {
-      let headers = [
-  
-
-        {
-         text: 'Id',
-          align: 'left',
-          sortable: false,
-          value: 'id',
-        }
-      ]
-for(var j in this.value){
-                if( this.value[j]=== "Amount"){
-                 
-               
-                headers.push( { text: 'Amount', value: 'amount' })
-                }else if( this.value[j]=== "Date"){                   
-                    headers.push( { text: 'Date', value: 'actionDate' })
-                }
-                 else if( this.value[j]=== "Trans-ref"){                                 
-                  headers.push( { text: 'Trans-ref', value: 'interswitchRef', sortable: false })
-                }
-                else if( this.value[j]=== "Type"){                   
-                     headers.push({ text: 'Type', value: 'type' })
-                }
-                else if(this.value[j]=== "Sub-type"){                   
-                    headers.push( { text: 'Sub-type', value: 'subType' })
-                }
-                else if( this.value[j]=== "Recipient"){                   
-                    headers.push({ text: 'Recipient', value: 'recipient' })
-                }
-                   else if( this.value[j]=== "Source"){                   
-                   headers.push( { text: 'Source', value: 'source' })
-                }
-                  
-                  else if( this.value[j]=== "Initial-Balance"){                   
-                  headers.push( { text: 'Initial-Balance', value: 'initialBalance' })
-                }
-                   else if( this.value[j]=== "Final-Balance"){                   
-                   headers.push({ text: 'Final-Balance', value: 'finalBalance' })
-                }
-                else if( this.value[j]=== "Terminal"){                   
-                   headers.push({ text: 'Terminal', value: 'terminal' })
-                }
-                
-            }
-   
-     
-      return headers
-    }
+         getRequest(){
+          return  this.$store.state.singleRequest[0]
+         },
+         getHistory(){
+          return  this.$store.state.history
+         }
     },
 
     watch: {
@@ -444,119 +457,15 @@ for(var j in this.value){
     },
 
     methods: {
-        changeStatus(){
-      this.changestatus = true
+      
+
+     
         },
-      pickDate(){
-  this.menu2= false;
-  // alert(this.todate)
-  // alert(this.fromdate)
-   this.RefreshTransaction()
-        
-      },
-         pickDate1(){
-  this.menu= false;
-  // alert(this.todate)
-  // alert(this.fromdate)
-   this.RefreshTransaction()
-        
-      },
-
-       toggle () {
-        this.$nextTick(() => {
-          if (this.likesAllFruit) {
-            this.selectedFruits = []
-          } else {
-            this.selectedFruits = this.fruits.slice()
-          }
-        })
-      },
-      initialize () {
-        this.desserts = [
-         
-          
-        ]
-      },
-
- 
-
- RefreshTransaction() {
-
-        if(this.trans === "All"){
-        let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate ,
-                      subtype: ""                                 
-                  }
-                  
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-              
-          })
-          .catch((error)=>{
-            console.log("yee")
-              console.log(error)
-                // alert(error)
-              
-          })
-      }
-      else{
-      //  alert(this.trans)
-  let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate,
-                      subtype: this.trans                 
-            }
-            
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-             
-          })
-          .catch((error)=>{
-            console.log("yee")
-              console.log(error)
-                // alert(error)
-              
-          })
-}
-      },
-
-submit() {
-      
-       this.dialog1 = false;
-        let newTransaction = {
-               transtype: this.transtype,
-               //category: this.category
-          }
-         // console.log(newComponent)
-          this.$store.dispatch('postNewTransaction', newTransaction)
-          .then((success)=>{
-              console.log(success.data);
-             
-               this.snackbar = true
-             
-          })
-          .catch((error)=>{
-              console.log(error.data)
-               alert(error)
-                this.snackbar1 = true
-          })
-      },
-      
-
-
     
+       
 
+      
 
-    },
 
     
 

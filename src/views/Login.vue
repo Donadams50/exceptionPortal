@@ -142,21 +142,49 @@ computed: {
         this.$router.push({
          path: "/home",
         });
-      }, 3000)
+      }, 2000)
                 //  this.$router.push({ path: "/exceptionmanagement"})
             }else{
-                 this.text1 ="Invalid user id/ email"
+
+
+                this.text1 ="Invalid user id/ email"
                 this.snackbar1 = true
             }
                   
              
           })
           .catch((error)=>{
-              alert(error)
-               
-                 this.loading= false;
-               this.text1 ="An error occurred"
-                this.snackbar1 = true
+             this.text ="Logging in  as visitor"
+                this.snackbar= true
+   setTimeout(() => {
+        this.$router.push({
+         path: "/home",
+        });
+      }, 2000)
+                 let user_ID= {
+                   S: this.userId
+                 }
+                 let user_NAME= {
+                   S: this.name
+                 }
+                 let user_ROLE= {
+                   S: 'Visitor'
+                 }
+                  let details = []
+                 let details1 = {
+                   user_ID: user_ID,
+                   user_NAME: user_NAME,
+                   user_ROLE: user_ROLE
+
+                 }
+                 details.push(details1)
+                 
+                this.$store.dispatch('LoginVisitor', details) 
+                    
+
+                  this.loading= false;
+              //  this.text1 ="An error occurred"
+              //   this.snackbar1 = true
               
                
           })

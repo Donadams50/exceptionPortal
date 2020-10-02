@@ -1,7 +1,46 @@
 <template>
     <div id="rollover">
       <Navbar/>
-        
+          <v-snackbar
+      v-model="snackbar"
+      :bottom="y === 'bottom'"
+      :color="green"
+      :left="x === 'left'"
+      :multi-line="mode === 'multi-line'"
+      :right="x === 'right'"
+      :timeout="timeout"
+      :top="y === 'top'"
+      :vertical="mode === 'vertical'"
+    >
+      {{ text }}
+      <v-btn
+        color="green"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+     <v-snackbar
+      v-model="snackbar1"
+      :bottom="y === 'bottom'"
+      :color="color"
+      :left="x === 'left'"
+      :multi-line="mode === 'multi-line'"
+      :right="x === 'right'"
+      :timeout="timeout"
+      :top="y === 'top'"
+      :vertical="mode === 'vertical'"
+    >
+      {{ text1 }}
+      <v-btn
+        color="red"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
      <v-card class="mx-5 mt-3">        
               <v-card-title>
                
@@ -20,11 +59,11 @@
                 
                 
                   <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Exception id</p>
-                <v-text-field solo v-model="userid"  style="border-radius:0px;" placeholder="Exception id" ></v-text-field>
+                <v-text-field :rules="[inputRule]" readonly solo v-model="exceptionId"  style="border-radius:0px;" placeholder="Exception id" ></v-text-field>
                    
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Exception type</p>
                       <v-select
-       v-model="etype"
+       v-model="ExceptionType"
        :items="items"  
         item-value ="Type"
          item-text="Type"
@@ -35,7 +74,7 @@
         
        
       ></v-select>
-      <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Exception type</p>
+      <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Expiration Date</p>
        <v-menu
         ref="menu"
         v-model="menu"
@@ -64,27 +103,31 @@
         
       </v-menu>
         <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Requestor</p>
-                <v-text-field solo  v-model="userid"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
+                <v-text-field :rules="[inputRule]" solo readonly  v-model="this.$store.state.LOGIN_SUCCESS[0].user_NAME.S"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Department </p>
-                <v-text-field solo v-model="userid"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
+                <v-text-field :rules="[inputRule]" solo v-model="Department"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
                      
                    
                      <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application code</p>
-                <v-text-field solo  v-model="userid"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
-                  <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application number</p>
-                <v-text-field solo  v-model="userid"  style="border-radius:0px;" placeholder="Application number" ></v-text-field>
+                <v-text-field solo :rules="[inputRule]" v-model="ApplicationCode"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
+                
                     
                    <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Description</p>
-                <v-text-field solo  v-model="userid"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                <v-text-field solo :rules="[inputRule]" v-model="Description"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                   <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Comments</p>
+                <v-text-field solo :rules="[inputRule]"  v-model="Comments"  style="border-radius:0px;" placeholder="Comments" ></v-text-field>
+                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Aws account </p>
+                <v-text-field :rules="[inputRule]" solo v-model="AwsAccount"  style="border-radius:0px;" placeholder="Aws account" ></v-text-field >       
+                     
                 </v-col>
    <v-col cols="12" md="5">
                
      <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Business need</p>
-     <v-text-field solo v-model="userid"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
+     <v-text-field :rules="[inputRule]" solo v-model="BusinessNeed"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
                     
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Division</p>
                       <v-select
-       v-model="dtype"
+       v-model="Division"
        :items="items1"  
         item-value ="Type"
          item-text="Type"
@@ -97,7 +140,7 @@
       ></v-select>
         <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Risk level</p>
                       <v-select
-       v-model="rtype"
+       v-model="RiskLevel"
        :items="items2"  
         item-value ="Type"
          item-text="Type"
@@ -109,17 +152,17 @@
        
       ></v-select>
        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Rationale</p>
-                <v-text-field solo  v-model="userid"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
+                <v-text-field solo :rules="[inputRule]" v-model="Rationale"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Impacted rules </p>
-                <v-text-field solo v-model="userid"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
-             <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman </p>
-                <v-text-field solo v-model="userid"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
+                <v-text-field :rules="[inputRule]" solo v-model="ImpactedRules"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
+             <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman id </p>
+                <v-text-field :rules="[inputRule]" solo v-model="xmanID"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
                      
           <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Back to normal state  </p>
-                <v-text-field solo v-model="userid"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
+                <v-text-field :rules="[inputRule]" solo v-model="BackToNormalState"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
                  <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Mitigation </p>
-                <v-text-field solo v-model="userid"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>        
-                     
+                <v-text-field :rules="[inputRule]" solo v-model="Mitigation"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+                
                 
                   
                 </v-col>
@@ -128,7 +171,7 @@
                  <v-row class="text-center">
              <v-col cols="12" md="10">
               <div  style=" " class="text-center ">
-               <v-btn  rounded class="text-none" :loading ="loading" rounde @click="submit()"    >
+               <v-btn  rounded class="text-none" :loading ="loading6" rounde @click="request()"    >
                    Request</v-btn >
                   </div> 
                   </v-col>              
@@ -151,11 +194,23 @@ export default {
     },
 
     data: () => ({
+        numberRule: val => {
+      if(val < 0 || val=== "") return 'Please enter a positive number'
+      return true
+    },
+      inputRule: val1 => {
+      if( val1 === "") return 'Field cannot be empty'
+      return true
+    },
+    emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
      
-      items1: [ 'Div A', 'Div B', 'Div C', 'Othhers' ],
+      items1: [ 'Div A', 'Div B', 'Div C', 'Aircraft'],
       items2: ['Not assesed', 'Low', 'Medium', 'High', 'Critical'],
       text: " ",
-      text1: " Manual credit not succesfull",
+      text1: " ",
       fromdate: new Date().toISOString().substr(0, 10),
       todate: new Date().toISOString().substr(0, 10),
       menu2: false,
@@ -169,231 +224,153 @@ export default {
        mode: '',
         x: null,
         y: 'top',
-      dialog: false,
-       dialog1: false,  
-      desserts: [],
+        exceptionId:'',
+        Rationale: "",
+        ImpactedRules: '',
+      
+        BackToNormalState: '',
+        Comments: '',
+        BusinessNeed: '',
+        RiskLevel: '',
+        xmanID: '',
+        Description: '',
+        ExceptionType: '',
+        Division: '',
+        Mitigation: '',
+        Department: '',
+        ExceptionLifetime: '',
+        ApplicationCode: '',
+        AwsAccount: '',
+        RequestStatus: '',
+        loading6: false
+        
+        
+   
      
     }),
     
-    mounted() {
-      // alert(this.trans)
-      // alert(this.value)
-      if(this.trans === "All"){
-        let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate,
-                      subtype: ''                                
-                  }
-                  
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-             
-          })
-          .catch((error)=>{
-            console.log("yee")
-              console.log(error)
-                // alert(error)
-              
-          })
-      }
-      else{
-let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate,
-                      subtype: this.trans                 
-            }
-            
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-             
-          })
-          .catch((error)=>{
-            console.log("yee")
-              console.log(error)
-                // alert(error)
-              
-          })
-}
+   
+    
+    mounted () { 
+        
+ 
+      
+       
+    if(this.$store.state.LOGIN_SUCCESS.length > 0){
+          
+         this.exceptionId = 'EXP-'+this.getExceptionCode()+''
+             console.log(this.$store.state.alUsers)
+          
+      
+    } else{
+this.$router.push({
+         path: "/",
+        })
+    } 
+      
+       
 
-     
+ 
+        
     },
 
     computed: {
-   headers() {
-      let headers = [
-  
-
-        {
-         text: 'Id',
-          align: 'left',
-          sortable: false,
-          value: 'id',
-        }
-      ]
-for(var j in this.value){
-                if( this.value[j]=== "Amount"){
-                 
-               
-                headers.push( { text: 'Amount', value: 'amount' })
-                }else if( this.value[j]=== "Date"){                   
-                    headers.push( { text: 'Date', value: 'actionDate' })
-                }
-                 else if( this.value[j]=== "Trans-ref"){                                 
-                  headers.push( { text: 'Trans-ref', value: 'interswitchRef', sortable: false })
-                }
-                else if( this.value[j]=== "Type"){                   
-                     headers.push({ text: 'Type', value: 'type' })
-                }
-                else if(this.value[j]=== "Sub-type"){                   
-                    headers.push( { text: 'Sub-type', value: 'subType' })
-                }
-                else if( this.value[j]=== "Recipient"){                   
-                    headers.push({ text: 'Recipient', value: 'recipient' })
-                }
-                   else if( this.value[j]=== "Source"){                   
-                   headers.push( { text: 'Source', value: 'source' })
-                }
-                  
-                  else if( this.value[j]=== "Initial-Balance"){                   
-                  headers.push( { text: 'Initial-Balance', value: 'initialBalance' })
-                }
-                   else if( this.value[j]=== "Final-Balance"){                   
-                   headers.push({ text: 'Final-Balance', value: 'finalBalance' })
-                }
-                else if( this.value[j]=== "Terminal"){                   
-                   headers.push({ text: 'Terminal', value: 'terminal' })
-                }
-                
-            }
    
-     
-      return headers
-    }
     },
 
     watch: {
     
     },
 
-    created () {
-      this.initialize()
-    },
+    
 
-    methods: {
-      pickDate(){
-  this.menu2= false;
-  // alert(this.todate)
-  // alert(this.fromdate)
-   this.RefreshTransaction()
-        
-      },
-         pickDate1(){
-  this.menu= false;
-  // alert(this.todate)
-  // alert(this.fromdate)
-   this.RefreshTransaction()
-        
-      },
-
-       toggle () {
-        this.$nextTick(() => {
-          if (this.likesAllFruit) {
-            this.selectedFruits = []
-          } else {
-            this.selectedFruits = this.fruits.slice()
-          }
-        })
-      },
-      initialize () {
-        this.desserts = [
-         
-          
-        ]
-      },
-
- 
-
- RefreshTransaction() {
-
-        if(this.trans === "All"){
-        let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate ,
-                      subtype: ""                                 
-                  }
-                  
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-              
-          })
-          .catch((error)=>{
-            console.log("yee")
-              console.log(error)
-                // alert(error)
-              
-          })
-      }
-      else{
-      //  alert(this.trans)
-  let payload = {
-                      from_date: this.fromdate,
-                      to_date: this.todate,
-                      subtype: this.trans                 
-            }
+    methods: { 
+       request(){
+       // alert(this.$store.state.singleRequest[0].RequestStatus.S,)
+if (this.$refs.form.validate()){
+            alert(this.fromdate)
             
-      this.$store.dispatch('loadTransactions', payload)
-       .then((success)=>{
-              console.log(success.data);
-             console.log( this.$store.state.transactions);
-              this.desserts = this.$store.state.transactions;
-             
-             
-          })
-          .catch((error)=>{
-            console.log("yee")
-              console.log(error)
-                // alert(error)
-              
-          })
+          this.loading6 = true
+           let data =
+                    {
+                    RequestID:this.exceptionId,
+                    Rationale: this.Rationale,
+                    ImpactedRules: this.ImpactedRules,
+                    RequestorName: this.$store.state.LOGIN_SUCCESS[0].user_NAME.S,
+                    BackToNormalState: this.BackToNormalState,
+                    Comments: this.Comments,
+                    BusinessNeed: this.BusinessNeed,
+                    RiskLevel: this.RiskLevel,
+                    xmanID: this.xmanID,
+                    Description: this.Description,
+                    ExceptionType: this.ExceptionType,
+                    Division: this.Division,
+                    Mitigation: this.Mitigation,
+                    Department: this.Department,
+                    ExceptionLifetime: this.fromdate,
+                    ApplicationCode: this.ApplicationCode,
+                    AwsAccount: this.AwsAccount,
+                    RequestStatus: "Awaiting-Review",
+                    RequestorID: this.$store.state.LOGIN_SUCCESS[0].user_ID.S
+                   
+                    }
+                    console.log(data)
+                  this.$store.dispatch('createRequest', data)
+                          .then((success)=>{
+                            console.log(success)
+                               //alert("success")
+                               this.loading6 = false
+                                 this.text = "Request created succesfully"
+                                  this.snackbar = true
+                                    setTimeout(() => {
+                                      this.$router.push({
+                                      path: "/exceptionmanagement",
+                                      });
+                                    }, 3000)
+                                  // this.$store.dispatch('loadSingleRequest', requestid) 
+                                  //  this.$store.dispatch('loadHistory', requestid)
+                              
+                            })
+                              .catch((error)=>{
+                            
+                                  console.log(error)
+                                    this.loading6 = false;
+                                  alert(error)
+                                  this.text1 = "Request not succesfully created"
+                                  this.snackbar1 = true
+                                  
+                              }) 
+
+          }            
+
+      },
+     
+ getExceptionCode(){
+    var numbers = "0123456789";
+
+    var chars= "9768532104";
+  
+    var code_length = 8;
+    var number_count = 4;
+    var letter_count = 4;
+  
+    var code = '';
+  
+    for(var i=0; i < code_length; i++) {
+       var letterOrNumber = Math.floor(Math.random() * 2);
+       if((letterOrNumber == 0 || number_count == 0) && letter_count > 0) {
+          letter_count--;
+          var rnum = Math.floor(Math.random() * chars.length);
+          code += chars[rnum];
+       }
+       else {
+          number_count--;
+          var rnum2 = Math.floor(Math.random() * numbers.length);
+          code += numbers[rnum2];
+       }
+    }
+return code
 }
-      },
-
-submit() {
-      
-       this.dialog1 = false;
-        let newTransaction = {
-               transtype: this.transtype,
-               //category: this.category
-          }
-         // console.log(newComponent)
-          this.$store.dispatch('postNewTransaction', newTransaction)
-          .then((success)=>{
-              console.log(success.data);
-             
-               this.snackbar = true
-             
-          })
-          .catch((error)=>{
-              console.log(error.data)
-               alert(error)
-                this.snackbar1 = true
-          })
-      },
-      
-
-
     
 
 

@@ -299,6 +299,7 @@ export default {
     }
   },
   mounted () { 
+if(this.$store.state.LOGIN_SUCCESS.length > 0){
     if(this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'){
            this.$store.dispatch('loadUsers')
        .then(()=>{
@@ -316,7 +317,11 @@ this.$router.push({
          path: "/",
         })
     } 
-      
+  }else{
+this.$router.push({
+         path: "/",
+        })
+    } 
        
 
  
@@ -440,10 +445,10 @@ this.$router.push({
               console.log(success.data);
               this.load = false;
               this.$store.dispatch('loadUsers')
-            //  alert(success.data);
+               this.deletedialog = false
             this.text = "User deleted succesfully"
                this.snackbar = true
-                this.newuser = false
+               // this.newuser = false
           
               
              

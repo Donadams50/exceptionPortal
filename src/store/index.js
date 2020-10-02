@@ -11,8 +11,20 @@ const vuexLocalStorage = new VuexPersist({
   storage: window.localStorage,
   reducer: state => state,
 })
-
+const getDefaultState = () => {
+  return {
+    alUsers:[],
+    LOGIN_SUCCESS: [],
+    allException: [],
+    myException: [],
+    myExceptionReal: [],
+    singleRequest: [],
+    history: []
+  }
+}
 export default new Vuex.Store({
+  
+  
   state: {
     alUsers:[],
     LOGIN_SUCCESS: [],
@@ -43,7 +55,10 @@ export default new Vuex.Store({
         state.LOGIN_SUCCESS = LOGIN_SUCCESS.data.Items
       
       },
+      LOGIN_SUCCESS2(state, LOGIN_SUCCESS) {
+        state.LOGIN_SUCCESS = LOGIN_SUCCESS
       
+      },
       allException(state, allException) {
             let array = allException.data
       for (let i = 0; i < array.length; i++) {
@@ -70,7 +85,28 @@ export default new Vuex.Store({
         state.history = history.data
       
       },
+    
      
+      updaterequest(state, updaterequest) {
+        state.updaterequest = updaterequest
+      
+      },
+      
+      
+      createrequest(state, createrequest) {
+        state.createrequest = createrequest
+      
+      },
+
+      resetState (state) {
+      
+        Object.assign(state, getDefaultState())
+      },
+      
+      mutateRequest(state, mutateRequest) {
+        state.mutateRequest = mutateRequest
+      
+      },
 
   },
   actions: {
@@ -121,7 +157,7 @@ export default new Vuex.Store({
         // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
            return new Promise ((resolve, reject)=>{
            axios
-            .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID='+userId+'') 
+            .post('https://2hyq76d74b.execute-api.us-east-1.amazonaws.com/User_deletion/?user_ID='+userId+'') 
           //   .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID=sumbomatic@gmail.com')  
              .then((data) => {
                console.log(data)
@@ -207,29 +243,30 @@ export default new Vuex.Store({
        resolve(data)
      
      let array = data.data
-            console.log(array.length)
-      let emptyObject = {
+      //       console.log(array.length)
+      // let emptyObject = {
           
-        }
-        let emptyArray = []
+      //   }
+      //   let emptyArray = []
       
       for (let i = 0; i < array.length; i++) {
         
-       emptyObject.RequestID = array[i].RequestID.S
-        emptyObject.ExceptionType = array[i].ExceptionType.S
-         emptyObject.RequestorName = array[i].RequestorName.S
-         emptyObject.Division = array[i].Division.S
-         emptyObject.ApplicationCode = array[i].ApplicationCode.S
-         emptyObject.ExceptionLifetime = array[i].ExceptionLifetime.S
-         emptyObject.RequestStatus = array[i].RequestStatus.S
+        array[i].RequestID = array[i].RequestID.S
+        array[i].ExceptionType = array[i].ExceptionType.S
+        array[i].RequestorName = array[i].RequestorName.S
+        array[i].Division = array[i].Division.S
+        array[i].ApplicationCode = array[i].ApplicationCode.S
+        array[i].ExceptionLifetime = array[i].ExceptionLifetime.S
+        array[i].RequestStatus = array[i].RequestStatus.S
+         array[i].RequestorID = array[i].RequestorID.S
       
-         emptyArray.push(emptyObject)
+        //  emptyArray.push(emptyObject)
         
       }
     //  console.log(emptyArray)
     // console.log(this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S)
      // commit('myException', data)
-      commit('myException', emptyArray)
+      commit('myException', array)
     })
     .catch((error)=>{
       reject(error)
@@ -289,6 +326,70 @@ export default new Vuex.Store({
       });
   
   },
+
+  updateRequest ( {commit}, body ) {
+    //alert("body")
+        // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+           return new Promise ((resolve, reject)=>{
+           axios
+             .post('https://d9ntc5522m.execute-api.us-east-1.amazonaws.com/Test/' , body)  
+             .then((data) => {
+               console.log(data)
+               resolve(data)
+             commit('updaterequest', data)
+                 }) 
+                 .catch((error)=>{
+                   
+                   alert(error)
+                   console.log(error)
+                   reject(error)
+                  
+                 });
+           });   
+       },
+
+  createRequest ( {commit}, body ) {
+        //alert("body")
+            // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+               return new Promise ((resolve, reject)=>{
+               axios
+                 .post('https://aynuytxoo3.execute-api.us-east-1.amazonaws.com/Test/' , body)  
+                 .then((data) => {
+                   console.log(data)
+                   resolve(data)
+                 commit('createrequest', data)
+                     }) 
+                     .catch((error)=>{
+                       
+                       alert(error)
+                       console.log(error)
+                       reject(error)
+                      
+                     });
+               });   
+           },
+
+
+  deleteRequest ( {commit}, requestId ) {
+    //alert("body")
+        // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+           return new Promise ((resolve, reject)=>{
+           axios
+            .post('https://qijz13j761.execute-api.us-east-1.amazonaws.com/Request_deletion/?RequestID='+requestId+'') 
+          //   .delete('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID=sumbomatic@gmail.com')  
+             .then((data) => {
+               console.log(data)
+               resolve(data)
+             commit('mutateRequest', data)
+                 }) 
+                 .catch((error)=>{
+                   alert(error)
+                   console.log(error)
+                   reject(error)
+                  
+                 });
+           });   
+       },
    //to post Login to the database
  Login({commit}, userId ) { 
  // alert(userId)
@@ -312,13 +413,18 @@ export default new Vuex.Store({
         });
   });   
 },
-LogOut:()=>{
-  //alert("start");
-  localStorage.removeItem("token")
+
+LoginVisitor({commit}, details ) { 
+  // alert(userId)
+ commit('LOGIN_SUCCESS2', details)
+           
+         
+ },
+LogOut:({commit})=>{
+  
+  //localStorage.removeItem("token")
   localStorage.removeItem("vuex")
-        // remove the axios default header
-  delete axios.defaults.headers.common['Token']
-//alert("finish");
+  commit('resetState')
 },
 
 

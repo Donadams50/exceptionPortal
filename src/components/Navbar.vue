@@ -79,7 +79,7 @@
         <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
       
-      <v-btn  text color="rgb(40, 31, 71)"  class="text-none  white--text" router-link to="/">  
+      <v-btn  text color="rgb(40, 31, 71)"  class="text-none  white--text" @click="LogOut()">  
        Sign out
         <v-icon>mdi-logout</v-icon>
       </v-btn>

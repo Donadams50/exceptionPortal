@@ -100,8 +100,16 @@ export default {
   
     }
   },
-  mounted () { 
-   
+   mounted () { 
+     
+    if(this.$store.state.LOGIN_SUCCESS.length === 0){
+          this.$router.push({
+         path: "/",
+        })
+    } else{
+
+    } 
+      
        
 
  

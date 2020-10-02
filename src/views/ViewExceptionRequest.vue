@@ -1,6 +1,46 @@
 <template>
     <div id="rollover">
          <Navbar/>
+          <v-snackbar
+      v-model="snackbar"
+      :bottom="y === 'bottom'"
+      :color="green"
+      :left="x === 'left'"
+      :multi-line="mode === 'multi-line'"
+      :right="x === 'right'"
+      :timeout="timeout"
+      :top="y === 'top'"
+      :vertical="mode === 'vertical'"
+    >
+      {{ text }}
+      <v-btn
+        color="green"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+     <v-snackbar
+      v-model="snackbar1"
+      :bottom="y === 'bottom'"
+      :color="color"
+      :left="x === 'left'"
+      :multi-line="mode === 'multi-line'"
+      :right="x === 'right'"
+      :timeout="timeout"
+      :top="y === 'top'"
+      :vertical="mode === 'vertical'"
+    >
+      {{ text1 }}
+      <v-btn
+        color="red"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
          <v-dialog v-model="changestatus" width="500" persistent>
            <v-card class="pa-12 mx-auto" id="login" max-width="500" elevation="7">
               <v-system-bar light color="#ffffff" class="mt-n5">
@@ -17,7 +57,7 @@
                         <v-col cols="12" md="12">                
                             <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Status</p>
                               <v-select
-       v-model="sta"
+       v-model="getRequest.RequestStatus.S"
        :items="itemssta"  
         item-value ="Type"
          item-text="Type"
@@ -29,13 +69,13 @@
        
       ></v-select>
                                <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Comment</p>
-                            <v-textarea    color="rgb(40, 31, 71)"   v-model="email"  filled></v-textarea>                       
+                            <v-textarea  :rules="[inputRule]"  color="rgb(40, 31, 71)"   v-model="comment2"  filled></v-textarea>                       
                         </v-col>
                       </v-row> 
                     </v-card-text>
                      <v-card-actions>
                         <div class="mx-auto">
-                          <v-btn   class="text-center" :loading="loading"  rounded  @click="addUser()">
+                          <v-btn   class="text-center"  :loading="loading6"  rounded  @click="finalChangeStatus()">
                              <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
                                 Change  
                              </div>
@@ -63,13 +103,13 @@
                         <v-col cols="12" md="12">                
                         
                                <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Comment</p>
-                            <v-textarea    color="rgb(40, 31, 71)"   v-model="comment1"  filled></v-textarea>                       
+                            <v-textarea   :rules="[inputRule]" color="rgb(40, 31, 71)"   v-model="comment1"  filled></v-textarea>                       
                         </v-col>
                       </v-row> 
                     </v-card-text>
                      <v-card-actions>
                         <div class="mx-auto">
-                          <v-btn   class="text-center" :loading="loading"  rounded  @click="commentChange()">
+                          <v-btn   class="text-center" :loading="loading5"  rounded  @click="finalChange()">
                              <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
                                 Change  
                              </div>
@@ -80,11 +120,16 @@
             </v-card>
         </v-dialog>
   <!-- comment -->
+   
           <v-card class="mx-5 mt-3">
-           
+          <div style="text-align:left ;font-weight:bold; font-size: 30px">
+               <v-btn  router-link to="/exceptionmanagement" icon class="hidden-xs-only">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+      </div>
               <v-card-title>
-               
-                    <div class="text-h6 my-2 ml-1 "> View request</div>
+                
+                    <div class="text-h6  ml-1 "> View request</div>
                     <v-spacer> </v-spacer>
                     
                 
@@ -100,7 +145,7 @@
                 
                 
                   <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Exception id</p>
-                <v-text-field readonly solo v-model="getRequest.RequestID.S"  style="border-radius:0px;" placeholder="Exception id" ></v-text-field>
+                <v-text-field readonly :rules="[inputRule]" solo v-model="getRequest.RequestID.S"  style="border-radius:0px;" placeholder="Exception id" ></v-text-field>
                    
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Exception type</p>
                       <v-select
@@ -124,6 +169,7 @@
         transition="scale-transition"
         color="primary"
         offset-y
+        :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_developer' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"
         min-width="290px"
       >
         <template v-slot:activator="{ on }">
@@ -144,23 +190,27 @@
         
       </v-menu>
         <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Requestor</p>
-                <v-text-field solo  v-model="getRequest.RequestorName.S"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
+                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.RequestorName.S"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Department </p>
-                <v-text-field solo v-model="getRequest.Department.S"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
+                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Department.S"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
                      
                    
                      <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application code</p>
-                <v-text-field solo  v-model="getRequest.ApplicationCode.S"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
-                  <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application number</p>
-                <v-text-field solo  v-model="eanumber"  style="border-radius:0px;" placeholder="Application number" ></v-text-field>
-                    
+                <v-text-field solo :rules="[inputRule]"  v-model="getRequest.ApplicationCode.S"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
+                 
                    <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Description</p>
-                <v-text-field solo  v-model="getRequest.Description.S"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                <v-text-field solo :rules="[inputRule]"  v-model="getRequest.Description.S"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                 <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Comments </p>
+                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Comments.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+                 <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Aws account </p>
+                <v-text-field solo :rules="[inputRule]" v-model="getRequest.AwsAccount.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>        
+                     
+                
                 </v-col>
    <v-col cols="12" md="5">
                
      <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Business need</p>
-     <v-text-field solo v-model="getRequest.BusinessNeed.S"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
+     <v-text-field solo :rules="[inputRule]" v-model="getRequest.BusinessNeed.S"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
                     
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Division</p>
                       <v-select
@@ -189,18 +239,17 @@
        
       ></v-select>
        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Rationale</p>
-                <v-text-field solo  v-model="getRequest.Rationale.S"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
+                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Rationale.S"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Impacted rules </p>
-                <v-text-field solo v-model="getRequest.ImpactedRules.S"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
+                <v-text-field :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_developer' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"  solo :rules="[inputRule]" v-model="getRequest.ImpactedRules.S"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
              <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman </p>
-                <v-text-field solo v-model="getRequest.xmanID.S"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
+                <v-text-field solo :rules="[inputRule]" v-model="getRequest.xmanID.S"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
                      
           <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Back to normal state  </p>
-                <v-text-field solo v-model="getRequest.BackToNormalState.S"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
+                <v-text-field solo :rules="[inputRule]" v-model="getRequest.BackToNormalState.S"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
                  <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Mitigation </p>
-                <v-text-field solo v-model="getRequest.Mitigation.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>        
-                     
-                
+                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Mitigation.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+              
                   
                 </v-col>
                    <v-col cols="12" md="3" lg="3" xl="3" sm="12">
@@ -208,7 +257,7 @@
            <div style="display:flex;  font-size:20px  "  >
           
           <p style=" font-size:25px font-weight:bold ; margin-top:10px"  class=" ml-2 "> Status :  </p>
-          <p  class=" ml-3 " style="font-size:15px  ; margin-top:10px "> {{getRequest.RequestStatus.S}}  </p>
+          <p  class=" ml-2 " style="font-size:15px  ; margin-top:10px "> {{getRequest.RequestStatus.S}}  </p>
     
       </div>
        
@@ -245,7 +294,7 @@
 
   <v-col cols="12" xs="12" sm="12" md="6" lg="6" xl="6">
 
-    <div class="text-h6 mt-5 " style="font-size:20px ; font-weight: bold"> Change History Log</div>
+    <div class="text-h6 mt-5 " style="font-size:20px ; font-weight: bold"> Request History </div>
      <v-expansion-panels class="mt-5" accordion>
      <v-expansion-panel>
         <v-expansion-panel-header disable-icon-rotate>
@@ -255,6 +304,8 @@
           </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
+
+          <div v-if="getHistory.length=== 0" class="text-h6 mt-5 " style="font-size:20px ; font-weight: bold"> No History </div>
           <v-timeline class="mt-5 ml-15" dense clipped>
      
 
@@ -299,10 +350,22 @@ export default {
     },
 
     data: () => ({
+       numberRule: val => {
+      if(val < 0 || val=== "") return 'Please enter a positive number'
+      return true
+    },
+      inputRule: val1 => {
+      if( val1 === "") return 'Field cannot be empty'
+      return true
+    },
+    emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
         sta: 'Implemented',
          changestatus: false,
          commentchange: false,
-        itemssta: [ 'Awaiting review', 'Approved', 'Rejected', 'Implemented', 'Deprecated'],
+        itemssta: [ 'Awaiting-Review', 'Approved', 'Rejected', 'Implemented', 'Deprecated'],
         ebusinessneed: 'lifting of truck',
         eid: "EXP0002",
         etype: 'Platform',
@@ -320,7 +383,7 @@ export default {
       items1: [ 'Div A', 'Div B', 'Div C', 'Aircraft' ],
       items2: ['Not Assessed', 'Low', 'Medium', 'High', 'Critical'],
       text: " ",
-      text1: " Manual credit not succesfull",
+      text1: "",
       fromdate: new Date().toISOString().substr(0, 10),
       todate: new Date().toISOString().substr(0, 10),
       menu2: false,
@@ -330,34 +393,19 @@ export default {
       snackbar1: false,
       timeout: 6000,
       transtype:'',
+      comment1: '',
+      comment2: '',
       items: ['Platform', 'Security', ],
        mode: '',
         x: null,
         y: 'top',
       dialog: false,
        dialog1: false,  
+       loading5: false,
+       loading6: false,
       desserts: [],
       items4: [
-          {
-            status: 'Awaiting review',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          },
-           {
-            status: 'Approved',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          },
-           {
-            status: 'Implemented',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          },
-           {
-            status: 'Deprecated',
-            comment: 'It is in a good condition',
-            date: '22-Dec,2020:20:45 pm'
-          }
+          
       ]
      
     }),
@@ -367,13 +415,19 @@ export default {
     mounted() {
       // alert(this.trans)
       // alert(this.value)
-        if(this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'|| this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'){
-          console.log("Welcome")
+           if(this.$store.state.LOGIN_SUCCESS.length > 0){
          let  requestid = this.$route.params.id
           //alert(requestid)
-        this.$store.dispatch('loadSingleRequest', requestid)
+        this.$store.dispatch('loadSingleRequest', requestid)  
        .then(()=>{
+        if(this.$store.state.LOGIN_SUCCESS[0].user_ID.S===this.$store.state.singleRequest[0].RequestorID.S || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'|| this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'){
+             console.log("Welcome")
              console.log(this.$store.state.singleRequest)
+              } else{
+this.$router.push({
+         path: "/",
+        })
+    } 
           
          })
           .catch((error)=>{
@@ -395,12 +449,8 @@ export default {
               
           }) 
           
-    } else{
-this.$router.push({
-         path: "/",
-        })
-    } 
-      
+   
+           }
      
 
      
@@ -425,10 +475,126 @@ this.$router.push({
 
     methods: {
       commentChange(){
-this.commentchange = true
+         if (this.$refs.form.validate()){
+         this.commentchange = true
+         }
       },
         changeStatus(){
       this.changestatus = true
+        },
+      finalChangeStatus(){
+        alert(this.$store.state.singleRequest[0].RequestStatus.S,)
+if (this.$refs.form.validate()){
+            //alert(this.$store.state.singleRequest[0].Rationale.S)
+            
+          this.loading6 = true
+           let data =
+                    {
+                    RequestID:this.$store.state.singleRequest[0].RequestID.S,
+                    Rationale: this.$store.state.singleRequest[0].Rationale.S,
+                    ImpactedRules: this.$store.state.singleRequest[0].ImpactedRules.S,
+                    RequestorName: this.$store.state.singleRequest[0].RequestorName.S,
+                    BackToNormalState: this.$store.state.singleRequest[0].BackToNormalState.S,
+                    Comments: this.$store.state.singleRequest[0].Comments.S,
+                    BusinessNeed: this.$store.state.singleRequest[0].BusinessNeed.S,
+                    RiskLevel: this.$store.state.singleRequest[0].RiskLevel.S,
+                    xmanID: this.$store.state.singleRequest[0].xmanID.S,
+                    Description: this.$store.state.singleRequest[0].Description.S,
+                    ExceptionType: this.$store.state.singleRequest[0].ExceptionType.S,
+                    Division: this.$store.state.singleRequest[0].Division.S,
+                    Mitigation: this.$store.state.singleRequest[0].Mitigation.S,
+                    Department: this.$store.state.singleRequest[0].Department.S,
+                    ExceptionLifetime: this.$store.state.singleRequest[0].ExceptionLifetime.S,
+                    ApplicationCode: this.$store.state.singleRequest[0].ApplicationCode.S,
+                    AwsAccount: this.$store.state.singleRequest[0].AwsAccount.S,
+                    RequestStatus: this.$store.state.singleRequest[0].RequestStatus.S,
+                    RequestUpdateComments:this.comment2,
+                    RequestorID: this.$store.state.singleRequest[0].RequestorID.S,
+                    CurrentUser: this.$store.state.LOGIN_SUCCESS[0].user_ID.S
+                    }
+                    
+                  this.$store.dispatch('updateRequest', data)
+                          .then((success)=>{
+                            console.log(success)
+                               //alert("success")
+                               this.loading6 = false
+                                 this.text = "Status changed succesfully"
+                                  this.snackbar = true
+                                  this.changestatus = false
+                                  let  requestid = this.$route.params.id
+                                  this.$store.dispatch('loadSingleRequest', requestid) 
+                                   this.$store.dispatch('loadHistory', requestid)
+                              
+                            })
+                              .catch((error)=>{
+                            
+                                  console.log(error)
+                                    this.loading6 = false;
+                                  alert(error)
+                                  this.text1 = "Status not succesfully changed"
+                                  this.snackbar1 = true
+                                  
+                              }) 
+
+          }            
+
+      },
+
+        finalChange(){
+          if (this.$refs.form.validate()){
+            //alert(this.$store.state.singleRequest[0].Rationale.S)
+            
+          this.loading5 = true
+           let data =
+                    {
+                    RequestID:this.$store.state.singleRequest[0].RequestID.S,
+                    Rationale: this.$store.state.singleRequest[0].Rationale.S,
+                    ImpactedRules: this.$store.state.singleRequest[0].ImpactedRules.S,
+                    RequestorName: this.$store.state.singleRequest[0].RequestorName.S,
+                    BackToNormalState: this.$store.state.singleRequest[0].BackToNormalState.S,
+                    Comments: this.$store.state.singleRequest[0].Comments.S,
+                    BusinessNeed: this.$store.state.singleRequest[0].BusinessNeed.S,
+                    RiskLevel: this.$store.state.singleRequest[0].RiskLevel.S,
+                    xmanID: this.$store.state.singleRequest[0].xmanID.S,
+                    Description: this.$store.state.singleRequest[0].Description.S,
+                    ExceptionType: this.$store.state.singleRequest[0].ExceptionType.S,
+                    Division: this.$store.state.singleRequest[0].Division.S,
+                    Mitigation: this.$store.state.singleRequest[0].Mitigation.S,
+                    Department: this.$store.state.singleRequest[0].Department.S,
+                    ExceptionLifetime: this.$store.state.singleRequest[0].ExceptionLifetime.S,
+                    ApplicationCode: this.$store.state.singleRequest[0].ApplicationCode.S,
+                    AwsAccount: this.$store.state.singleRequest[0].AwsAccount.S,
+                    RequestStatus: this.$store.state.singleRequest[0].RequestStatus.S,
+                    RequestUpdateComments:this.comment1,
+                    RequestorID: this.$store.state.singleRequest[0].RequestorID.S,
+                    CurrentUser: this.$store.state.LOGIN_SUCCESS[0].user_ID.S
+                    }
+                    
+                  this.$store.dispatch('updateRequest', data)
+                          .then((success)=>{
+                            console.log(success)
+                         //      alert("success")
+                               this.loading5 = false
+                                 this.text = "Request details  updated succesfully"
+                                  this.snackbar = true
+                                  this.commentchange = false
+                                  let  requestid = this.$route.params.id
+                                  this.$store.dispatch('loadSingleRequest', requestid) 
+                                   this.$store.dispatch('loadHistory', requestid)
+                              
+                            })
+                              .catch((error)=>{
+                            
+                                  console.log(error)
+                                    this.loading5 = false;
+                                  alert(error)
+                                  this.text1 = "Request details not updated succesfully"
+                                  this.snackbar1 = true
+                                  
+                              }) 
+
+          }            
+
         },
       pickDate(){
   this.menu2= false;
@@ -437,29 +603,9 @@ this.commentchange = true
    this.RefreshTransaction()
         
       },
-         pickDate1(){
-  this.menu= false;
-  // alert(this.todate)
-  // alert(this.fromdate)
-   this.RefreshTransaction()
-        
-      },
+       
 
-       toggle () {
-        this.$nextTick(() => {
-          if (this.likesAllFruit) {
-            this.selectedFruits = []
-          } else {
-            this.selectedFruits = this.fruits.slice()
-          }
-        })
-      },
-      initialize () {
-        this.desserts = [
-         
-          
-        ]
-      },
+      
 
  
 
