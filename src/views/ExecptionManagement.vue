@@ -98,7 +98,7 @@
               
       </v-tab-item>
     
-    <v-tab>All exceptions</v-tab>
+    <v-tab >All exceptions</v-tab>
     <v-tab-item class="mx-5"> 
      <v-toolbar flat  color="">
                             
@@ -109,7 +109,7 @@
                 </div>
     </v-toolbar>
 
-      <v-data-table
+      <v-data-table  v-if="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S !=='Visitor'"
                 :headers="headers1"
                 :items="allException"
                 :search="searchWord"

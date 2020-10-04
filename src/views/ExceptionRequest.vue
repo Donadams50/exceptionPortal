@@ -155,8 +155,8 @@
                 <v-text-field solo :rules="[inputRule]" v-model="Rationale"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Impacted rules </p>
                 <v-text-field :rules="[inputRule]" solo v-model="ImpactedRules"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
-             <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman id </p>
-                <v-text-field :rules="[inputRule]" solo v-model="xmanID"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
+             <p v-if="this.ExceptionType=== 'Security' " style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman id </p>
+                <v-text-field  v-if="this.ExceptionType=== 'Security' "  :rules="[inputRule]" solo v-model="xmanID"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
                      
           <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Back to normal state  </p>
                 <v-text-field :rules="[inputRule]" solo v-model="BackToNormalState"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>

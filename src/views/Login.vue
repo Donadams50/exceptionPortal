@@ -53,7 +53,7 @@
                 <v-text-field solo v-model="name"  :rules="[inputRule]" style="border-radius:0px;"  placeholder="User name" ></v-text-field>
 
                
-                <p style="text-align:right; color: black; font-size: 12px; font-weight: 200px; font-family:Lato; margin-top:-20px">Forgot Password?</p>
+                <!-- <p style="text-align:right; color: black; font-size: 12px; font-weight: 200px; font-family:Lato; margin-top:-20px">Forgot Password?</p> -->
             </div>
             <div id="loginbutton">   
                     <v-btn rounded :loading ="loading"  @click="Login()" color="rgb(40, 31, 71)" class="text-capitalize pl-7 pr-7 " style="font-family: Lato;" dark large>Login</v-btn>

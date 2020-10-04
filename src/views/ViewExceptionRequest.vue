@@ -483,7 +483,7 @@ this.$router.push({
       this.changestatus = true
         },
       finalChangeStatus(){
-        alert(this.$store.state.singleRequest[0].RequestStatus.S,)
+     //   alert(this.$store.state.singleRequest[0].RequestStatus.S,)
 if (this.$refs.form.validate()){
             //alert(this.$store.state.singleRequest[0].Rationale.S)
             
