@@ -337,20 +337,7 @@ this.$router.push({
       newUser(){
        this.newuser = true
       },
-      onlyForCurrency ($event) {
-     // console.log($event.keyCode); //keyCodes value
-     let keyCode = ($event.keyCode ? $event.keyCode : $event.which);
-
-     // only allow number and one dot
-     if ((keyCode < 48 || keyCode > 57) && (keyCode !== 46 || this.amount.indexOf('.') != -1)) { // 46 is dot
-      $event.preventDefault();
-     }
-
-     // restrict to 2 decimal places
-     if(this.amount!=null && this.amount.indexOf(".")>-1 && (this.amount.split('.')[1].length > 1)){
-     $event.preventDefault();
-     }
-   },
+     
 
    updateUsers(){
      if (this.$refs.form.validate()){

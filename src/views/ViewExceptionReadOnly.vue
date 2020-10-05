@@ -61,8 +61,7 @@
        :items="itemssta"  
         item-value ="Type"
          item-text="Type"
-
-         class=" primary--text" color="primary"
+ 
          :rules="[v => !!v || 'Item is required']"
         solo
         
@@ -153,7 +152,7 @@
         item-value ="Type"
          item-text="Type"
           readonly
-         class=" primary--text" color="primary"
+         
          :rules="[v => !!v || 'Item is required']"
         solo
         
@@ -166,7 +165,7 @@
         :close-on-content-click="false"
         :nudge-right="40"
         transition="scale-transition"
-        color="primary"
+        
         offset-y
         min-width="290px"
       >
@@ -176,13 +175,13 @@
            solo
             
             readonly
-            color="primary"
+           
             v-on="on"
           ></v-text-field>
         </template>
         <v-date-picker
           v-model="getRequest.ExceptionLifetime.S" 
-         @input="pickdate"
+        
          readonly
         >       
         </v-date-picker>
@@ -218,7 +217,7 @@
         item-value ="Type"
          item-text="Type"
           readonly
-         class=" primary--text" color="primary"
+         
          :rules="[v => !!v || 'Item is required']"
         solo
         
@@ -231,7 +230,7 @@
         item-value ="Type"
          item-text="Type"
         readonly
-         class=" primary--text" color="primary"
+         
          :rules="[v => !!v || 'Item is required']"
         solo
         
@@ -282,7 +281,7 @@
         <v-expansion-panel-header disable-icon-rotate>
               History Log
           <template v-slot:actions>
-           <v-icon color="primary">$expand</v-icon>
+           <v-icon >$expand</v-icon>
           </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -294,7 +293,7 @@
       <v-timeline-item 
         v-for="(item, i) in getHistory"
         :key="i"
-        :color="primary"
+        
         class="mb-2"  
         icon-color="rgb(40, 31, 71)"
         fill-dot
@@ -453,7 +452,7 @@ export default {
     },
 
     created () {
-      this.initialize()
+
     },
 
     methods: {

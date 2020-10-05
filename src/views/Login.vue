@@ -137,12 +137,12 @@ computed: {
             if(this.userId === newusid && this.name === newusname ){
               
                this.text ="Login succesful"
-                this.snackbar= true
+              //  this.snackbar= true
                    setTimeout(() => {
         this.$router.push({
          path: "/home",
         });
-      }, 2000)
+      }, 10)
                 //  this.$router.push({ path: "/exceptionmanagement"})
             }else{
 
@@ -155,12 +155,12 @@ computed: {
           })
           .catch((error)=>{
              this.text ="Logging in  as visitor"
-                this.snackbar= true
+            //    this.snackbar= true
    setTimeout(() => {
         this.$router.push({
          path: "/home",
         });
-      }, 2000)
+      }, 10)
                  let user_ID= {
                    S: this.userId
                  }

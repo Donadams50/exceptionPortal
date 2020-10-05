@@ -62,7 +62,7 @@
         item-value ="Type"
          item-text="Type"
 
-         class=" primary--text" color="primary"
+        
          :rules="[v => !!v || 'Item is required']"
         solo
         
@@ -77,7 +77,7 @@
                         <div class="mx-auto">
                           <v-btn   class="text-center"  :loading="loading6"  rounded  @click="finalChangeStatus()">
                              <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
-                                Change  
+                                Save  
                              </div>
                             </v-btn>                        
                         </div>
@@ -91,7 +91,7 @@
            <v-card class="pa-12 mx-auto" id="login" max-width="500" elevation="7">
               <v-system-bar light color="#ffffff" class="mt-n5">
                 <v-spacer></v-spacer>
-                    <v-btn icon @click="commentchange=false">
+                    <v-btn icon @click="cc()">
                         <v-icon color="red">mdi-close</v-icon>
                      </v-btn>
                 </v-system-bar>
@@ -111,7 +111,7 @@
                         <div class="mx-auto">
                           <v-btn   class="text-center" :loading="loading5"  rounded  @click="finalChange()">
                              <div style="font-size:13px; font-weight:400;  text-align:right;" class="  mx-3 text-capitalize"> 
-                                Change  
+                                Save  
                              </div>
                             </v-btn>                        
                         </div>
@@ -122,7 +122,7 @@
   <!-- comment -->
    
           <v-card class="mx-5 mt-3">
-          <div style="text-align:left ;font-weight:bold; font-size: 30px">
+          <div style="text-align:left ;font-weight:bold; margin-left: 10px; font-size: 30px">
                <v-btn  router-link to="/exceptionmanagement" icon class="hidden-xs-only">
         <v-icon>arrow_back</v-icon>
       </v-btn>
@@ -138,7 +138,7 @@
            
               
                                
-                  <v-form ref="form"> 
+                  <v-form ref="form" v-model="isFormValid"> 
               <v-row class="mx-15">
                
                <v-col cols="12" md="4">
@@ -153,8 +153,9 @@
        :items="items"  
         item-value ="Type"
          item-text="Type"
-
-         class=" primary--text" color="primary"
+         @input="up($event)"
+:disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"
+          
          :rules="[v => !!v || 'Item is required']"
         solo
         
@@ -167,7 +168,7 @@
         :close-on-content-click="true"
         :nudge-right="40"
         transition="scale-transition"
-        color="primary"
+       
         offset-y
         :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_developer' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"
         min-width="290px"
@@ -178,39 +179,39 @@
            solo
             
             readonly
-            color="primary"
+           
             v-on="on"
           ></v-text-field>
         </template>
         <v-date-picker
+        @input="up($event)"
           v-model="getRequest.ExceptionLifetime.S" 
-         @input="pickdate"
+        
         >       
         </v-date-picker>
         
       </v-menu>
         <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Requestor</p>
-                <v-text-field readonly solo :rules="[inputRule]" v-model="getRequest.RequestorName.S"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
+                <v-text-field @input="up($event)" readonly solo :rules="[inputRule]" v-model="getRequest.RequestorName.S"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Department </p>
-                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Department.S"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
+                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Department.S"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
                      
                    
                      <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application code</p>
-                <v-text-field solo :rules="[inputRule]"  v-model="getRequest.ApplicationCode.S"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
+                <v-text-field @input="up($event)" solo :rules="[inputRule]"  v-model="getRequest.ApplicationCode.S"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
                  
                    <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Description</p>
-                <v-text-field solo :rules="[inputRule]"  v-model="getRequest.Description.S"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                <v-text-field @input="up($event)" solo :rules="[inputRule]"  v-model="getRequest.Description.S"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
                  <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Comments </p>
-                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Comments.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
-                 <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Aws account </p>
-                <v-text-field solo :rules="[inputRule]" v-model="getRequest.AwsAccount.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>        
+                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Comments.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+                       
                      
                 
                 </v-col>
    <v-col cols="12" md="5">
                
      <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Business need</p>
-     <v-text-field solo :rules="[inputRule]" v-model="getRequest.BusinessNeed.S"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
+     <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.BusinessNeed.S"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
                     
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Division</p>
                       <v-select
@@ -218,8 +219,8 @@
        :items="items1"  
         item-value ="Type"
          item-text="Type"
-
-         class=" primary--text" color="primary"
+        @input="up($event)"
+         
          :rules="[v => !!v || 'Item is required']"
         solo
         
@@ -231,25 +232,27 @@
        :items="items2"  
         item-value ="Type"
          item-text="Type"
-
-         class=" primary--text" color="primary"
+        @input="up($event)"
+        
          :rules="[v => !!v || 'Item is required']"
         solo
         
        
       ></v-select>
        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Rationale</p>
-                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Rationale.S"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
+                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Rationale.S"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Impacted rules </p>
-                <v-text-field :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_developer' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"  solo :rules="[inputRule]" v-model="getRequest.ImpactedRules.S"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
-             <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman </p>
-                <v-text-field solo :rules="[inputRule]" v-model="getRequest.xmanID.S"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
-                     
+                <v-text-field @input="up($event)" :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_developer' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"  solo :rules="[inputRule]" v-model="getRequest.ImpactedRules.S"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
+             <div v-if="getRequest.ExceptionType.S==='Security'">
+             <p v-if="getRequest.ExceptionType.S=== 'Security' " style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman </p>
+                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.xmanID.S"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
+              </div>       
           <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Back to normal state  </p>
                 <v-text-field solo :rules="[inputRule]" v-model="getRequest.BackToNormalState.S"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
                  <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Mitigation </p>
-                <v-text-field solo :rules="[inputRule]" v-model="getRequest.Mitigation.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
-              
+                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Mitigation.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+              <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Aws account </p>
+                <v-text-field  @input="up($event)"  solo :rules="[inputRule]" v-model="getRequest.AwsAccount.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
                   
                 </v-col>
                    <v-col cols="12" md="3" lg="3" xl="3" sm="12">
@@ -258,7 +261,7 @@
           
           <p style=" font-size:25px font-weight:bold ; margin-top:10px"  class=" ml-2 "> Status :  </p>
           <p  class=" ml-2 " style="font-size:15px  ; margin-top:10px "> {{getRequest.RequestStatus.S}}  </p>
-    
+      
       </div>
        
 
@@ -277,10 +280,15 @@
  </v-card>
                    </v-col>    
               </v-row>
+              <div style="text-align:left ;font-weight:bold; font-size: 30px">
+               <v-btn  router-link to="/exceptionmanagement" icon class="hidden-xs-only">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+      </div>
                  <v-row class="text-center">
              <v-col cols="12" md="8">
               <div  style=" " class="text-center ">
-               <v-btn  rounded class="text-none" :loading ="loading" rounde @click="commentChange()"    >
+               <v-btn :disabled="!isFormValid || this.changeInput ===false"  rounded class="text-none" :loading ="loading" rounde @click="commentChange()"    >
                    Update</v-btn >
                   </div> 
                   </v-col>    
@@ -300,7 +308,7 @@
         <v-expansion-panel-header disable-icon-rotate>
               History Log
           <template v-slot:actions>
-           <v-icon color="primary">$expand</v-icon>
+           <v-icon >$expand</v-icon>
           </template>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
@@ -313,7 +321,7 @@
       <v-timeline-item 
         v-for="(item, i) in getHistory"
         :key="i"
-        :color="primary"
+        
         class="mb-2"  
         icon-color="rgb(40, 31, 71)"
         fill-dot
@@ -406,8 +414,9 @@ export default {
       desserts: [],
       items4: [
           
-      ]
-     
+      ],
+      isFormValid: false,
+     changeInput : false
     }),
   
             
@@ -470,14 +479,32 @@ this.$router.push({
     },
 
     created () {
-      this.initialize()
+      
     },
 
     methods: {
+      up(event){
+        this.changeInput = true
+       //   alert(event.length)
+   //alert("up")
+      },
+           cc(){
+           this.commentchange=false
+           let  requestid = this.$route.params.id
+           this.$store.dispatch('loadSingleRequest', requestid) 
+           },
       commentChange(){
-         if (this.$refs.form.validate()){
-         this.commentchange = true
+       
+        if (this.$store.state.singleRequest[0].ExceptionType.S === 'Platform'){
+               this.commentchange = true
+        }else{
+         if (this.$store.state.singleRequest[0].xmanID.S === 'None'){
+          alert('Xman id field cant be None')
+         }else{
+          this.commentchange = true
          }
+         }
+        
       },
         changeStatus(){
       this.changestatus = true
@@ -524,6 +551,8 @@ if (this.$refs.form.validate()){
                                   let  requestid = this.$route.params.id
                                   this.$store.dispatch('loadSingleRequest', requestid) 
                                    this.$store.dispatch('loadHistory', requestid)
+                                   this.comment2 = ""
+                                   this.changeInput = false
                               
                             })
                               .catch((error)=>{
@@ -581,7 +610,8 @@ if (this.$refs.form.validate()){
                                   let  requestid = this.$route.params.id
                                   this.$store.dispatch('loadSingleRequest', requestid) 
                                    this.$store.dispatch('loadHistory', requestid)
-                              
+                                  this.comment1 = ""
+                                  this.changeInput = false
                             })
                               .catch((error)=>{
                             
@@ -596,13 +626,7 @@ if (this.$refs.form.validate()){
           }            
 
         },
-      pickDate(){
-  this.menu2= false;
-  // alert(this.todate)
-  // alert(this.fromdate)
-   this.RefreshTransaction()
-        
-      },
+     
        
 
       
