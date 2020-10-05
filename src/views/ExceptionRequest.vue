@@ -1,6 +1,6 @@
 <template>
     <div id="rollover">
-      <Navbar/>
+   
           <v-snackbar
       v-model="snackbar"
       :bottom="y === 'bottom'"
@@ -24,7 +24,7 @@
      <v-snackbar
       v-model="snackbar1"
       :bottom="y === 'bottom'"
-      :color="color"
+      :color="red"
       :left="x === 'left'"
       :multi-line="mode === 'multi-line'"
       :right="x === 'right'"

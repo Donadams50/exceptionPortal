@@ -2,14 +2,7 @@
   <div id="loginform">
      <v-snackbar
       v-model="snackbar"
-      :bottom="y === 'bottom'"
-      :color="color"
-      :left="x === 'left'"
-      :multi-line="mode === 'multi-line'"
-      :right="x === 'right'"
-      :timeout="timeout"
-      :top="y === 'top'"
-      :vertical="mode === 'vertical'"
+      
     >
       {{ text }}
       <v-btn
@@ -22,14 +15,7 @@
     </v-snackbar>
      <v-snackbar
       v-model="snackbar1"
-      :bottom="y === 'bottom'"
-      :color="color"
-      :left="x === 'left'"
-      :multi-line="mode === 'multi-line'"
-      :right="x === 'right'"
-      :timeout="timeout"
-      :top="y === 'top'"
-      :vertical="mode === 'vertical'"
+     
     >
       {{ text1 }}
       <v-btn
@@ -119,10 +105,7 @@ computed: {
          if (this.$refs.form.validate()){
   this.loading = true
      
-//           let newLogin = {
-//         username :this.username,
-//         password: this.password,      
-//  }
+
     let userId = this.userId
          
            this.$store.dispatch('Login', userId)

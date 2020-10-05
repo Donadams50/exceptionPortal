@@ -1,11 +1,6 @@
 <template>
      <div id="registeruser" >
-               <Navbar/>
-               
-    
-    
-      
-    
+              
             
                            <v-toolbar flat  color="">
                             <div style="font-size:20px;  " class="text-h6 mt-7 mx-auto "> Raise security and platform exception request and get your application exempted from specific restriction </div>

@@ -1,16 +1,16 @@
 <template>
   <div class="about">
-    <Navbar/>
+
       <v-snackbar
       v-model="snackbar"
       :bottom="y === 'bottom'"
       :color="color"
       :left="x === 'left'"
-      :multi-line="mode === 'multi-line'"
+      
       :right="x === 'right'"
       :timeout="timeout"
       :top="y === 'top'"
-      :vertical="mode === 'vertical'"
+      
     >
       {{ text }}
       <v-btn
@@ -26,11 +26,11 @@
       :bottom="y === 'bottom'"
       :color="color"
       :left="x === 'left'"
-      :multi-line="mode === 'multi-line'"
+      
       :right="x === 'right'"
       :timeout="timeout"
       :top="y === 'top'"
-      :vertical="mode === 'vertical'"
+      
     >
       {{ text1 }}
       <v-btn
@@ -147,6 +147,8 @@ export default {
 
      data () {
       return {
+        snackbar: false,
+        snackbar1: false,
         rid: '',
         searchWord:'',
         searchWord1: '',
@@ -253,7 +255,14 @@ this.$router.push({
     methods:{
           viewException(id){
             this.loading = true
-            this.$router.push({ path: `/exceptionmanagement/${id}`})
+            if(this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='Visitor'){
+               this.$router.push({ path: `/exceptionmanagementread/${id}`})
+            }else{
+
+              this.$router.push({ path: `/exceptionmanagement/${id}`})
+            }
+            
+            
    //  this.$router.push({ path: "/exceptionmanagement/"})
           },
            viewExceptionRead(id, requestoid){
