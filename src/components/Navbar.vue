@@ -1,8 +1,8 @@
 <template>
   <nav>
- 
+ <!-- class="hidden-md-and-up " -->
    <v-app-bar class="mx-2" clipped app color="rgb(40, 31, 71)">
-       <v-app-bar-nav-icon color="white" @click="drawer = !drawer" class="hidden-md-and-up "></v-app-bar-nav-icon>
+       <v-app-bar-nav-icon color="white" @click="drawer = !drawer" ></v-app-bar-nav-icon>
       <v-toolbar-title class="headline ">
         <span class="white--text">Exception Portal  </span>
       </v-toolbar-title>
@@ -39,7 +39,7 @@
                 <v-icon color="rgb(40, 31, 71)">home</v-icon>
               </v-list-item-icon>
               <v-item-content>
-                <v-list-item-title class="listColor">
+                <v-list-item-title style="margin-left: -20px; font-size: 16px" class="listColor">
                   Home
                 </v-list-item-title>
               </v-item-content>
@@ -50,7 +50,7 @@
                 <v-icon color="rgb(40, 31, 71)">mdi-laptop</v-icon>
               </v-list-item-icon>
               <v-item-content>
-                <v-list-item-title >
+                <v-list-item-title style="margin-left: -20px; font-size: 16px" >
                  Exception Request  
                 </v-list-item-title>
               </v-item-content>
@@ -60,7 +60,7 @@
                 <v-icon color="rgb(40, 31, 71)">mdi-database</v-icon>
               </v-list-item-icon>
               <v-item-content>
-                <v-list-item-title class="listColor">
+                <v-list-item-title style="margin-left: -20px; font-size: 16px" class="listColor">
                  Exception Management
                 </v-list-item-title>
               </v-item-content>
@@ -70,7 +70,7 @@
                 <v-icon color="rgb(40, 31, 71)">person</v-icon>
               </v-list-item-icon>
               <v-item-content>
-                <v-list-item-title >
+                <v-list-item-title style="margin-left: -20px; font-size: 16px" >
                  User Management  
                 </v-list-item-title>
               </v-item-content>
@@ -90,7 +90,7 @@
                 <v-icon color="rgb(40, 31, 71)">mdi-open-in-new</v-icon>
               </v-list-item-icon>
               <v-item-content>
-                <v-list-item-title >
+                <v-list-item-title style="margin-left: -20px; font-size: 20px" >
                 Getting started 
                 </v-list-item-title>
               </v-item-content>

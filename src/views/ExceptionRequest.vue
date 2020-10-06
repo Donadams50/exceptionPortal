@@ -179,7 +179,7 @@
                </v-form> 
                
             </v-card-text>
-          </v-card>>             
+          </v-card>           
        
     
      

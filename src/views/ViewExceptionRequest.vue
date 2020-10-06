@@ -45,7 +45,7 @@
            <v-card class="pa-12 mx-auto" id="login" max-width="500" elevation="7">
               <v-system-bar light color="#ffffff" class="mt-n5">
                 <v-spacer></v-spacer>
-                    <v-btn icon @click="changestatus=false">
+                    <v-btn icon @click="cstatus()">
                         <v-icon color="red">mdi-close</v-icon>
                      </v-btn>
                 </v-system-bar>
@@ -483,6 +483,12 @@ this.$router.push({
     },
 
     methods: {
+      cstatus(){
+          let  requestid = this.$route.params.id
+           this.$store.dispatch('loadSingleRequest', requestid) 
+            this.changestatus = false
+           
+      },
       up(event){
         this.changeInput = true
        //   alert(event.length)
