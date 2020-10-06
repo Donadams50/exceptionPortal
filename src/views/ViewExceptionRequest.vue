@@ -416,7 +416,8 @@ export default {
           
       ],
       isFormValid: false,
-     changeInput : false
+     changeInput : false,
+      finalcomment: ''
     }),
   
             
@@ -432,6 +433,7 @@ export default {
         if(this.$store.state.LOGIN_SUCCESS[0].user_ID.S===this.$store.state.singleRequest[0].RequestorID.S || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'|| this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'){
              console.log("Welcome")
              console.log(this.$store.state.singleRequest)
+             this.finalcomment = this.$store.state.singleRequest[0].RequestStatus.S
               } else{
 this.$router.push({
          path: "/",
@@ -518,9 +520,10 @@ this.$router.push({
       finalChangeStatus(){
      //   alert(this.$store.state.singleRequest[0].RequestStatus.S,)
 if (this.$refs.form.validate()){
-            //alert(this.$store.state.singleRequest[0].Rationale.S)
-            
-          this.loading6 = true
+           
+           let fincom = ' Status change from '+this.finalcomment+' to '+this.$store.state.singleRequest[0].RequestStatus.S+' "'+this.comment2+'"'
+        
+        this.loading6 = true
            let data =
                     {
                     RequestID:this.$store.state.singleRequest[0].RequestID.S,
@@ -541,7 +544,7 @@ if (this.$refs.form.validate()){
                     ApplicationCode: this.$store.state.singleRequest[0].ApplicationCode.S,
                     AwsAccount: this.$store.state.singleRequest[0].AwsAccount.S,
                     RequestStatus: this.$store.state.singleRequest[0].RequestStatus.S,
-                    RequestUpdateComments:this.comment2,
+                    RequestUpdateComments: fincom,
                     RequestorID: this.$store.state.singleRequest[0].RequestorID.S,
                     CurrentUser: this.$store.state.LOGIN_SUCCESS[0].user_ID.S
                     }

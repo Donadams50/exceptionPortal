@@ -107,7 +107,11 @@ export default new Vuex.Store({
         state.mutateRequest = mutateRequest
       
       },
-
+      
+      createfeedback(state, createfeedback) {
+        state.createfeedback = createfeedback
+      
+      },
   },
   actions: {
      //to add mew user
@@ -368,7 +372,26 @@ export default new Vuex.Store({
                      });
                });   
            },
-
+           createFeedback ( {commit}, body ) {
+            //alert("body")
+                // axios.defaults.headers.common['Token'] = localStorage.getItem("token")
+                   return new Promise ((resolve, reject)=>{
+                   axios
+                     .post('https://q2iwvkb8ni.execute-api.us-east-1.amazonaws.com/test/' , body)  
+                     .then((data) => {
+                       console.log(data)
+                       resolve(data)
+                     commit('createfeedback', data)
+                         }) 
+                         .catch((error)=>{
+                           
+                           alert(error)
+                           console.log(error)
+                           reject(error)
+                          
+                         });
+                   });   
+               },
 
   deleteRequest ( {commit}, requestId ) {
     //alert("body")
