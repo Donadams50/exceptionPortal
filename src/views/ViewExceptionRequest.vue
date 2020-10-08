@@ -194,16 +194,16 @@
         <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Requestor</p>
                 <v-text-field @input="up($event)" readonly solo :rules="[inputRule]" v-model="getRequest.RequestorName.S"  style="border-radius:0px;" placeholder="requestor" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Department </p>
-                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Department.S"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
+                <v-text-field @input="up($event)"  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]" v-model="getRequest.Department.S"  style="border-radius:0px;" placeholder="Department" ></v-text-field>       
                      
                    
                      <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Application code</p>
-                <v-text-field @input="up($event)" solo :rules="[inputRule]"  v-model="getRequest.ApplicationCode.S"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
+                <v-text-field @input="up($event)"  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]"  v-model="getRequest.ApplicationCode.S"  style="border-radius:0px;" placeholder="Application code" ></v-text-field>
                  
                    <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Description</p>
-                <v-text-field @input="up($event)" solo :rules="[inputRule]"  v-model="getRequest.Description.S"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
+                <v-text-field @input="up($event)" :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]"  v-model="getRequest.Description.S"  style="border-radius:0px;" placeholder="Description" ></v-text-field>
                  <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Comments </p>
-                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Comments.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+                <v-text-field @input="up($event)"  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]" v-model="getRequest.Comments.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
                        
                      
                 
@@ -211,7 +211,7 @@
    <v-col cols="12" md="5">
                
      <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Business need</p>
-     <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.BusinessNeed.S"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
+     <v-text-field @input="up($event)" :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'"  solo :rules="[inputRule]" v-model="getRequest.BusinessNeed.S"  style="border-radius:0px;" placeholder="Business need" ></v-text-field>
                     
                        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Division</p>
                       <v-select
@@ -219,7 +219,7 @@
        :items="items1"  
         item-value ="Type"
          item-text="Type"
-        @input="up($event)"
+        @input="up($event)" :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'"
          
          :rules="[v => !!v || 'Item is required']"
         solo
@@ -233,33 +233,33 @@
         item-value ="Type"
          item-text="Type"
         @input="up($event)"
-        
+         :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'"
          :rules="[v => !!v || 'Item is required']"
         solo
         
        
       ></v-select>
        <p style="text-align:left; color: black; font-family:Lato; margin-bottom:-1px">Rationale</p>
-                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Rationale.S"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
+                <v-text-field @input="up($event)"  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]" v-model="getRequest.Rationale.S"  style="border-radius:0px;" placeholder="Rationale" ></v-text-field>
                <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Impacted rules </p>
-                <v-text-field @input="up($event)" :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_developer' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"  solo :rules="[inputRule]" v-model="getRequest.ImpactedRules.S"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
+                <v-text-field @input="up($event)" :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'role_operations' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'Visitor'"  solo :rules="[inputRule]" v-model="getRequest.ImpactedRules.S"  style="border-radius:0px;" placeholder="Impacted rules" ></v-text-field>
              <div v-if="getRequest.ExceptionType.S==='Security'">
              <p v-if="getRequest.ExceptionType.S=== 'Security' " style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px">Xman </p>
-                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.xmanID.S"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
+                <v-text-field @input="up($event)"  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]" v-model="getRequest.xmanID.S"  style="border-radius:0px;" placeholder="Xman" ></v-text-field>       
               </div>       
           <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Back to normal state  </p>
-                <v-text-field solo :rules="[inputRule]" v-model="getRequest.BackToNormalState.S"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
+                <v-text-field  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]" v-model="getRequest.BackToNormalState.S"  style="border-radius:0px;" placeholder="Back to normal state" ></v-text-field>
                  <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Mitigation </p>
-                <v-text-field @input="up($event)" solo :rules="[inputRule]" v-model="getRequest.Mitigation.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+                <v-text-field @input="up($event)"  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]" v-model="getRequest.Mitigation.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
               <p style="text-align:left; color:black;  font-family:Lato; margin-bottom:-1px"> Aws account </p>
-                <v-text-field  @input="up($event)"  solo :rules="[inputRule]" v-model="getRequest.AwsAccount.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
+                <v-text-field  @input="up($event)"  :disabled="this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S === 'exception_manager'" solo :rules="[inputRule]" v-model="getRequest.AwsAccount.S"  style="border-radius:0px;" placeholder="Mitigation" ></v-text-field>
                   
                 </v-col>
                    <v-col cols="12" md="3" lg="3" xl="3" sm="12">
                         <v-card class="mx-2"   >
            <div style="display:flex;  font-size:20px  "  >
           
-          <p style=" font-size:25px font-weight:bold ; margin-top:10px"  class=" ml-2 "> Status :  </p>
+          <p style=" font-size: 15px ; font-family:Lato ; margin-top:10px"  class=" ml-1"> Status :  </p>
           <p  class=" ml-2 " style="font-size:15px  ; margin-top:10px "> {{getRequest.RequestStatus.S}}  </p>
       
       </div>
@@ -328,10 +328,10 @@
         small
       >
         <v-row  style="">
-          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -10px">Update by:</v-col>  <v-col cols="6" style="margin-left: -10px">{{item.update_champion.S}}</v-col>
+          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -40px">Update by:</v-col>  <v-col cols="6" style="margin-left: -10px">{{item.update_champion.S}}</v-col>
           <!-- <v-col cols="12" style="margin-top:-10px">{{item.status}} </v-col> -->
-          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -10px">Comment:</v-col>  <v-col cols="6" style="margin-left: -5px">{{item.comment.S}}</v-col>
-            <v-col no-gutters  cols="6" style="font-weight: bold;margin-left: -10px">Date:</v-col>  <v-col cols="6" style="margin-left: -20px">{{item.date_timestamp.S}}</v-col>
+          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -40px">Comment:</v-col>  <v-col cols="6" style="margin-left: -5px">{{item.comment.S}}</v-col>
+            <v-col no-gutters  cols="6" style="font-weight: bold;margin-left: -40px">Date:</v-col>  <v-col cols="6" style="margin-left: -20px">{{item.date_timestamp.S}}</v-col>
         </v-row>
       </v-timeline-item>
 
@@ -430,7 +430,7 @@ export default {
           //alert(requestid)
         this.$store.dispatch('loadSingleRequest', requestid)  
        .then(()=>{
-        if(this.$store.state.LOGIN_SUCCESS[0].user_ID.S===this.$store.state.singleRequest[0].RequestorID.S || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'|| this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'){
+        if(this.$store.state.LOGIN_SUCCESS[0].user_ID.S===this.$store.state.singleRequest[0].RequestorID.S || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin'|| this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'||this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='role_developer'){
              console.log("Welcome")
              console.log(this.$store.state.singleRequest)
              this.finalcomment = this.$store.state.singleRequest[0].RequestStatus.S
