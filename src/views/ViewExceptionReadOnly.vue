@@ -254,7 +254,7 @@
                         <v-card class="mx-2"   >
            <div style="display:flex;  font-size:20px  "  >
           
-          <p style=" font-size:25px font-weight:bold ; margin-top:10px"  class=" ml-2 "> Status :  </p>
+          <p style=" font-size:15px ; font-family:Lato; margin-top:10px"  class=" ml-2 "> Status :  </p>
           <p  class=" ml-3 " style="font-size:15px  ; margin-top:10px "> {{getRequest.RequestStatus.S}}  </p>
     
       </div>
@@ -300,10 +300,10 @@
         small
       >
         <v-row  style="">
-          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -10px">Update by:</v-col>  <v-col cols="6" style="margin-left: -10px">{{item.update_champion.S}}</v-col>
+          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -40px">Update by:</v-col>  <v-col cols="6" style="margin-left: -10px">{{item.update_champion.S}}</v-col>
           <!-- <v-col cols="12" style="margin-top:-10px">{{item.status}} </v-col> -->
-          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -10px">Comment:</v-col>  <v-col cols="6" style="margin-left: -5px">{{item.comment.S}}</v-col>
-            <v-col no-gutters  cols="6" style="font-weight: bold;margin-left: -10px">Date:</v-col>  <v-col cols="6" style="margin-left: -20px">{{item.date_timestamp.S}}</v-col>
+          <v-col no-gutters  cols="6" style="font-weight: bold; margin-left: -40px">Comment:</v-col>  <v-col cols="6" style="margin-left: -5px">{{item.comment.S}}</v-col>
+            <v-col no-gutters  cols="6" style="font-weight: bold;margin-left: -40px">Date:</v-col>  <v-col cols="6" style="margin-left: -20px">{{item.date_timestamp.S}}</v-col>
         </v-row>
       </v-timeline-item>
 
