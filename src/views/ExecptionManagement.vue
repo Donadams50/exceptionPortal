@@ -267,7 +267,7 @@ this.$router.push({
           },
            viewExceptionRead(id, requestoid){
              this.loading = true
-             if(    this.$store.state.LOGIN_SUCCESS[0].user_ID.S===requestoid || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager'){
+             if(    this.$store.state.LOGIN_SUCCESS[0].user_ID.S===requestoid || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='admin' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='exception_manager' || this.$store.state.LOGIN_SUCCESS[0].user_ROLE.S==='role_developer'){
            
             this.$router.push({ path: `/exceptionmanagement/${id}`})
              }else{
