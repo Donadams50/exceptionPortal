@@ -41,60 +41,61 @@
         Close
       </v-btn>
     </v-snackbar>
+
+   
             
                            <v-toolbar flat  color="">
-                            <div style="font-size:20px;  " class="text-h6 mt-7 mx-5 ">  Getting Started</div>
+                            <div style="font-size:20px;  " class="text-h6 mt-7 mx-5 "> <b> Getting Started </b> </div>
                             
                             </v-toolbar>
 
                 <div class="ml-5">
                <div style="font-size:15px;  text-align:left; " class="text-h6 mt-3 ml-12 "> i. Overview</div>
                 <div style="font-size:15px;  text-align:left; " class="text-h6 mt-4 ml-12 "> ii. Authentication</div>
-                 <div style="font-size:15px;  text-align:left; " class="text-h6 mt-4 ml-12 "> iii. Repository</div>
-                  <div style="font-size:15px;  text-align:left; " class="text-h6 mt-4 ml-12 "> iv. Issues</div>
+                  <div style="font-size:15px;  text-align:left; " class="text-h6 mt-4 ml-12 "> iii. Feedback </div>
      </div>
-           <div style="font-size:15px;  text-align:left;" class="text-h6  ml-10 mx-auto mt-4 ">Let's walk through core API concepts as we tackle some event that will make you request exception </div>
+           <div style="font-size:15px;  text-align:left;" class="text-h6  ml-10 mx-auto mt-4 ">Let's walk through core concepts to ease the usage of this portal. </div>
 
-          <div style="font-size:20px; text-align:left" class="text-h6 mt-7 mx-10">  Overview</div>
+          <div style="font-size:20px; text-align:left" class="text-h6 mt-7 mx-10"> <b> Overview </b> </div>
 
            <div style="font-size:15px;  text-align:left; " class="text-h6  ml-12 mx-auto mt-4 "> The portal enables requester to raise security and platform exception.
-                      Platform exception request on approval will ensure compliance engine would bypass requested rule for respective 
-                      application. The items with status <b color="Red">approved</b> in this portal will not be modified /terminated/actioned
-                      upon by the requester. Every request will be assigned a status of <b>Awaiting-response</b>authomatically. The exception with <b>Awaiting-status</b> state would still be actioned upon by ratifier. Only ratifier would 
-                      would have te priviledge to convert the status of the bypass items to <b>approved</b> after thorough validations.
-                      Every entry in this website is time limited depending on the underlying mechanism of approval. If applicationteams have to extend the request before expiry, raise a new extension request in portal which 
-                      is followed by approval process. Only CRE'S are eligible for filling exception request
+             Platform exception request on approval will ensure compliance engine would bypass requested rule for respective 
+                      application. 
            </div>
-         <div style="font-size:20px; text-align:left; " class="text-h6 mt-7 mx-10"> Authentication</div>
+         <div style="font-size:20px; text-align:left; " class="text-h6 mt-7 mx-10"> <b> Authentication </b> </div>
 
-            <div style="font-size:15px;  text-align:left;" class="text-h6  ml-12 mx-auto mt-4 "> The portal enables requester to raise security and platform exception.
-                      Platform exception request on approval will ensure compliance engine would bypass requested rule for respective 
-                      application. The items with status <b color="Red">approved</b> in this portal will not be modified /terminated/actioned
-                      upon by the requester. Every request will be assigned a status of <b>Awaiting-response</b>authomatically. The exception with <b>Awaiting-status</b> state would still be actioned upon by ratifier. Only ratifier would 
-                      would have te priviledge to convert the status of the bypass items to <b>approved</b> after thorough validations.
-                      Every entry in this website is time limited depending on the underlying mechanism of approval. If applicationteams have to extend the request before expiry, raise a new extension request in portal which 
-                      is followed by approval process. Only CRE'S are eligible for filling exception request
-                     </div>
-                         
-                         <div style="font-size:20px; text-align:left;" class="text-h6 mt-7 mx-10"> Repository</div>
+            <div style="font-size:15px;  text-align:left; " class="text-h6  ml-12 mx-auto mt-4 "> The portal enables requester to raise security and platform exception.
+              This portal is authenticated with One-Login. User having access to One-Login will be authorised to raise request
+              and view their requests . 
+              Permissions on portal are restricted depending on user role. 
+              <ul> 
+                <li>Role-Operations</li>
+                <li>Role-Developer </li>
+                <li>Exception Manager</li> 
+                <li>Admin</li> 
+              </ul> 
 
-            <div style="font-size:15px;  text-align:left;" class="text-h6  ml-12 mx-auto mt-4 "> The portal enables requester to raise security and platform exception.
-                      Platform exception request on approval will ensure compliance engine would bypass requested rule for respective 
-                      application. The items with status <b color="Red">approved</b> in this portal will not be modified /terminated/actioned
-                      upon by the requester. Every request will be assigned a status of <b>Awaiting-response</b>authomatically. The exception with <b>Awaiting-status</b> state would still be actioned upon by ratifier. Only ratifier would 
-                      would have te priviledge to convert the status of the bypass items to <b>approved</b> after thorough validations.
-                      Every entry in this website is time limited depending on the underlying mechanism of approval. If applicationteams have to extend the request before expiry, raise a new extension request in portal which 
-                      is followed by approval process. Only CRE'S are eligible for filling exception request
-                      </div>
-                      <div style="font-size:20px; text-align:left; " class="text-h6 mt-7 mx-10"> Issues</div>
-               
-            <div style="font-size:15px;  text-align:left;" class="text-h6  ml-12 mx-auto mt-4 "> The portal enables requester to raise security and platform exception.
-                      Platform exception request on approval will ensure compliance engine would bypass requested rule for respective 
-                      application. The items with status <b color="Red">approved</b> in this portal will not be modified /terminated/actioned
-                      upon by the requester. Every request will be assigned a status of 
-                      </div>
+              Access control varies with each role. User not desgnated with any of these roles wont be able to edit/update request . 
+              Such users need to get in touch with role-operations or role-developers for further assistance.
+
+            </div>
+            
+            <div style="font-size:15px;  text-align:left; " class="text-h6  ml-12 mx-auto mt-4 ">
+             <b> Role-Operation </b> : This role wil be able to raise request and see all the requests raised by requestors.</div>
+             <div style="font-size:15px;  text-align:left; " class="text-h6  ml-12 mx-auto mt-4 ">
+             <b> Role-Developer </b> : Role-Developer will be able to update/edit request details but wont be able to update reuqest status .</div>
+             <div style="font-size:15px;  text-align:left; " class="text-h6  ml-12 mx-auto mt-4 ">
+             <b> Exception-Manager </b> : This role can only update status of request and expiration date of request.</div>
+           <div style="font-size:15px;  text-align:left; " class="text-h6  ml-12 mx-auto mt-4 ">
+             <b> Admin </b> : Admin is elite role with full access on every action. Admin can only add and delete user. User management section is not visible to any other role. </div>
+            <div style="font-size:15px;  text-align:left; " class="text-h6  ml-12 mx-auto mt-4 ">
+              ** All users can delete or update there own requests till status is "Awaiting-Review".
+            </div>
+          
+            <div style="font-size:20px; text-align:justify; " class="text-h6 mt-7 mx-10"> <b> Feedback </b> </div>
+            
                        
-                       <p style="text-align:left; color: black; font-family:Lato; margin-top: 10px; margin-bottom:-1px"  class="text-h6  ml-12 mx-auto mt-4 ">Feedback</p>
+                       <p style="text-align:left; color: black; font-family:Lato; margin-top: 10px; margin-bottom:-1px"  class="text-h6  ml-12 mx-auto mt-4 "></p>
                             <v-form ref="form" v-model="isFormValid" >
                             <v-textarea style="margin-right: 100px; margin-left:50px " placeholder="Post your feedback"   :rules="[inputRule]" color="rgb(40, 31, 71)"   v-model="feedback"  filled></v-textarea>
           
