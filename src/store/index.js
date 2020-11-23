@@ -22,6 +22,22 @@ const getDefaultState = () => {
     history: []
   }
 }
+
+
+function setLoggedIn(newValue) {
+  state.loggedIn = newValue;
+}
+
+function setLoggedOut() {
+  state.loggedIn = false;
+  state.cognitoInfo = {};
+}
+
+function setCognitoInfo(newValue){
+  state.cognitoInfo = newValue;
+}
+
+
 export default new Vuex.Store({
   
   
@@ -32,8 +48,11 @@ export default new Vuex.Store({
     myException: [],
     myExceptionReal: [],
     singleRequest: [],
-    history: []
-   
+    history: [],
+    cognitoInfo: {},
+    loggedIn: false,
+    loadingState: true,
+    errorLoadingState: false
 
   },
   plugins: [vuexLocalStorage.plugin],

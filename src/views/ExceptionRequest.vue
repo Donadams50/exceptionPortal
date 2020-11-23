@@ -1,6 +1,7 @@
 <template>
+
     <div id="rollover">
-   
+   <Navbar/>
           <v-snackbar
       v-model="snackbar"
       :bottom="y === 'bottom'"

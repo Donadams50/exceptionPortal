@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-
+<Navbar/>
       <v-snackbar
       v-model="snackbar"
       :bottom="y === 'bottom'"

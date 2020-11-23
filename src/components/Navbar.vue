@@ -9,12 +9,12 @@
       <v-spacer></v-spacer> 
         
        <v-btn text color="rgb(40, 31, 71)" class="hidden-sm-and-down  white--text text-none">
-          {{userdetails.user_NAME.S}}
+          <!-- {{userdetails.user_NAME.S}} -->
         <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
       
     <v-btn text color="rgb(40, 31, 71)" class=" hidden-sm-and-down  white--text text-none">
-          {{userdetails.user_ROLE.S}}
+          <!-- {{userdetails.user_ROLE.S}} -->
         <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
       
@@ -65,7 +65,7 @@
                 </v-list-item-title>
               </v-item-content>
             </v-list-item>
-             <v-list-item router-link to="/users" v-if="userdetails.user_ROLE.S==='admin'">
+             <v-list-item router-link to="/users" >
               <v-list-item-icon>
                 <v-icon color="rgb(40, 31, 71)">person</v-icon>
               </v-list-item-icon>
@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import auth from '../app/auth';
 export default {
   data(){
      return{
@@ -114,21 +115,21 @@ export default {
         }
   },
   computed: {
-             userdetails(){
+            //  userdetails(){
     
-                       return this.$store.state.LOGIN_SUCCESS[0]
-                              }
+            //            return this.$store.state.LOGIN_SUCCESS[0]
+            //                   }
             
                    },
    methods :{
        LogOut(){
 
-   
+   auth.auth.signOut();
          
-           this.$store.dispatch('LogOut')
-          .then(() => {
-         this.$router.push('/')
-        })
+        //    this.$store.dispatch('LogOut')
+        //   .then(() => {
+        //  this.$router.push('/')
+        // })
            
          
                
