@@ -34,7 +34,7 @@
               </v-flex>
           </v-layout>   
           <v-list dense nav class="mt-6">
-            <v-list-item router-link to="/home">
+            <v-list-item router-link to="/">
               <v-list-item-icon>
                 <v-icon color="rgb(40, 31, 71)">home</v-icon>
               </v-list-item-icon>

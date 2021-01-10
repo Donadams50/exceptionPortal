@@ -1,4 +1,5 @@
 import Vue from "vue";
+
 import Router from "vue-router";
 import MainLayout from "../Layouts/MainLayout.vue";
 import Home from "../views/Home.vue";
@@ -8,7 +9,8 @@ import ExceptionRequest from "../views/ExceptionRequest.vue";
 import ViewExceptionReadOnly from "../views/ViewExceptionReadOnly.vue";
 import GettingStarted from "../views/GettingStarted.vue";
 import ViewExceptionRequest from "../views/ViewExceptionRequest.vue";
-
+import  jwt from  "jsonwebtoken";
+import jwkToPem from "jwk-to-pem";
 Vue.use(Router);
 
 
@@ -21,26 +23,76 @@ import UserInfoApi from '../app/user-info-api';
 
 
 
-function requireAuth(to, from, next) {
+function requireAuth (to, from, next) {
+ 
+  console.log(auth.auth)
+  console.log(auth.auth.getSession() )
+  console.log(auth.auth.signInUserSession.getAccessToken())
+  console.log(auth.auth.isUserSignedIn())
+  console.log(auth.auth.getCurrentUser())
+  console.log(location.href.replace(location.origin, ''))
+  const url = window.location.href
+  const namew = "id_token"
+  name = namew.replace(/[\[\]]/g, '\\$&');
+  const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+  results = regex.exec(url);
+  // if (!results) return null;
+  // if (!results[2]) return '';
+  // return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  console.log(results)
+  console.log(results[2])
+  console.log(decodeURIComponent(results[2].replace(/\+/g, ' ')))
+  window.stop();
+   const token= results[2]
+   const key = "yoursecret";
   
-    if (!auth.auth.isUserSignedIn()) {  
-      alert("jj")
+    const jwk = {
+  
+      "alg": "RS256",
+      "e": "AQAB",
+      "kid": "BLts9xaB7u2smwHGez6xcFr7mfm/kaOozU+DBaf2v/U=",
+      "kty": "RSA",
+      "n": "3y5WUAc4_J4knqCux_RIPGJ70BuszoHVEo99AIbf9jqk07_G_pYCLntsDlmTeXhShvdbhhdns77B3ClAIvJZ7YMB2dV4jB7Megoq2VWsSISuRp9mgHaFlEFWNJ0wmiOZVS6hHsC3iwpeZCYYkaeUTaXUKACtohEk6332Nq5q62HWm2GVqrgA_1IqohbcKX7YILm8r0bjtX6Lz5x9YkUZKt1FU_yVpK9s5G8Nxk7OC7DFoOA0SPxT6tDm5DN5T2XZt0e8RdFPlxzrv2SXvmkpEkzLOJfEFaTvsFGYygwm3GWpHv3C-Kqntghsu2TIWONZ5anla0Xc5ANuSnmvf0_xiQ",
+      "use": "sig"
+    
+      }
+    
+  
+  const pem = jwkToPem(jwk);
+   jwt.verify(token, pem, { algorithms: ['RS256'] }, function(err, decodedToken) {
+     if(err){
+      //console.log (decodedToken)
+      console.log ("omo error")
+      console.log (err)
+     }else{
+      console.log ("my token")
+      console.log (decodedToken)
+     // alert(decodedToken.email)
+     }
+     
+ });
+  
+    if (auth.auth.isUserSignedIn()) { 
+      alert("ii") 
+      console.log("kk")
+      console.log(auth.auth.isUserSignedIn())
    // this.$store.state.loggedIn = true
       next({
       path: '/login',
-     query: { redirect: to.fullPath }, 
+    // query: { redirect: to.fullPath }, 
       });
     
      } 
     else {
     alert("hh")
-    next()
-    UserInfoApi.getUserInfo().then(response => {
+    
     // this.$store.state.loggedIn = true
     // this.$store.state.cognitoInfo = response
-      console.log(response)
-       next();
-    });
+    //  console.log(response)
+     //  next();
+    
+    next()
+   
       
   }
 }
