@@ -264,10 +264,10 @@ export default {
           
       
     } else{
-// this.$router.push({
-//          path: "/",
-//         })
-    } 
+this.$router.push({
+         path: "/login",
+        })
+   } 
       
        
 

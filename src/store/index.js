@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from 'axios'
 import VueAxios from 'vue-axios'
- import VuexPersist from 'vuex-persist'
+import VuexPersist from 'vuex-persist'
 
 Vue.use(Vuex);
 Vue.use(VueAxios, axios)
@@ -24,13 +24,15 @@ const getDefaultState = () => {
 }
 
 
+
 function setLoggedIn(newValue) {
   state.loggedIn = newValue;
+
 }
 
 function setLoggedOut() {
   state.loggedIn = false;
-  state.cognitoInfo = {};
+ 
 }
 
 function setCognitoInfo(newValue){
@@ -76,6 +78,11 @@ export default new Vuex.Store({
       },
       LOGIN_SUCCESS2(state, LOGIN_SUCCESS) {
         state.LOGIN_SUCCESS = LOGIN_SUCCESS
+      
+      },
+      
+      loginStatus(state, loginStatus) {
+        state.loggedIn = loginStatus
       
       },
       allException(state, allException) {
@@ -469,10 +476,16 @@ LogOut:({commit})=>{
   commit('resetState')
 },
 
-
+loginStatus({commit}, loginStatus ) { 
+  // alert(userId)
+ commit('loginStatus', loginStatus)
+           
+         
+ },
 
 
   },
 
   modules: {}
 });
+

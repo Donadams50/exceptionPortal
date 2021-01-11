@@ -9,13 +9,13 @@
       <v-spacer></v-spacer> 
         
        <v-btn text color="rgb(40, 31, 71)" class="hidden-sm-and-down  white--text text-none">
-          <!-- {{userdetails.user_NAME.S}} -->
-        <!-- <v-icon>mdi-apps</v-icon> -->
+          {{userdetails.user_NAME.S}} 
+         <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
       
     <v-btn text color="rgb(40, 31, 71)" class=" hidden-sm-and-down  white--text text-none">
-          <!-- {{userdetails.user_ROLE.S}} -->
-        <!-- <v-icon>mdi-apps</v-icon> -->
+          {{userdetails.user_ROLE.S}} 
+         <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
       
       <v-btn  text color="rgb(40, 31, 71)"  class="text-none  white--text" @click="LogOut()">  
@@ -105,6 +105,7 @@
 
 <script>
 import auth from '../app/auth';
+import axios from 'axios'
 export default {
   data(){
      return{
@@ -115,21 +116,35 @@ export default {
         }
   },
   computed: {
-            //  userdetails(){
+             userdetails(){
     
-            //            return this.$store.state.LOGIN_SUCCESS[0]
-            //                   }
+                       return this.$store.state.LOGIN_SUCCESS[0]
+                              }
             
                    },
    methods :{
        LogOut(){
 
-   auth.auth.signOut();
+   //auth.auth.signOut();
          
-        //    this.$store.dispatch('LogOut')
-        //   .then(() => {
-        //  this.$router.push('/')
-        // })
+           this.$store.dispatch('LogOut')
+          .then(() => {
+            return new Promise ((resolve, reject)=>{
+        axios
+          .get('https://portal-test12.auth.us-east-1.amazoncognito.com/logout?client_id=5gul6il2bkp93j0eg9uoeb90vs&logout_uri=http://localhost:8080/logout') 
+          .then((data) => {
+            console.log("data no")
+            console.log(decodedToken)
+           console.log(data)
+           
+              }) 
+              .catch((error)=>{
+                reject(error)
+                 alert(error)
+                
+              });
+        }); 
+        })
            
          
                
