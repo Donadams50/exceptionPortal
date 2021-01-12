@@ -35,13 +35,17 @@ async function requireAuth (to, from, next) {
       console.log("kk")
       console.log(auth.auth.isUserSignedIn())
    // this.$store.state.loggedIn = true
-      next({
-      path: '/login',
-    // query: { redirect: to.fullPath }, 
-      });
+     next()
     
      } 
     else {
+      localStorage.removeItem("vuex")
+      //store.state.loggedIn = loginStatus
+      if(store.state.loggedIn === true){
+        next()
+      }else{
+
+      
       console.log(auth.auth)
   console.log(auth.auth.getSession() )
   console.log(auth.auth.signInUserSession.getAccessToken())
@@ -84,6 +88,29 @@ async function requireAuth (to, from, next) {
         axios
           .get('https://x084zktapc.execute-api.us-east-1.amazonaws.com/Test/?user_ID='+decodedToken.email+'') 
           .then((data) => {
+
+            if(data.data.Items.length === 0 ){
+             // alert("ggg")
+              let user_ID= {
+                S: decodedToken.email
+              }
+              let user_NAME= {
+                S: decodedToken.email
+              }
+              let user_ROLE= {
+                S: 'Visitor'
+              }
+               let details = []
+              let details1 = {
+                user_ID: user_ID,
+                user_NAME: user_NAME,
+                user_ROLE: user_ROLE
+
+              }
+              details.push(details1)
+              store.state.LOGIN_SUCCESS = details
+
+            }else{
             console.log("data yes")
             console.log(decodedToken)
            console.log(data.data.Items[0])
@@ -108,10 +135,11 @@ async function requireAuth (to, from, next) {
           }
           details.push(details1)
           store.state.LOGIN_SUCCESS = details
-                
+           }     
               }) 
               .catch((error)=>{
                 reject(error)
+                alert("gg")
                 // alert(error)
                  let user_ID= {
                   S: decodedToken.email
@@ -135,11 +163,11 @@ async function requireAuth (to, from, next) {
         }); 
       
        
-      next()
+      
      }
      
  });
-   // alert("gg")
+   
    // getParameterByName()
     // this.$store.state.loggedIn = true
     // this.$store.state.cognitoInfo = response
@@ -148,7 +176,7 @@ async function requireAuth (to, from, next) {
     
     next()
    
-      
+}
   }
 })
   

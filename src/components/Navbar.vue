@@ -1,3 +1,34 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@Donadams50 
+Donadams50
+/
+exceptionPortal
+2
+00
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+exceptionPortal/src/components/Navbar.vue
+@Donadams50
+Donadams50 update
+Latest commit 4976376 on Oct 6, 2020
+ History
+ 1 contributor
+157 lines (131 sloc)  4.86 KB
+  
 <template>
   <nav>
  <!-- class="hidden-md-and-up " -->
@@ -9,13 +40,13 @@
       <v-spacer></v-spacer> 
         
        <v-btn text color="rgb(40, 31, 71)" class="hidden-sm-and-down  white--text text-none">
-          {{userdetails.user_NAME.S}} 
-         <!-- <v-icon>mdi-apps</v-icon> -->
+          {{userdetails.user_NAME.S}}
+        <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
       
     <v-btn text color="rgb(40, 31, 71)" class=" hidden-sm-and-down  white--text text-none">
-          {{userdetails.user_ROLE.S}} 
-         <!-- <v-icon>mdi-apps</v-icon> -->
+          {{userdetails.user_ROLE.S}}
+        <!-- <v-icon>mdi-apps</v-icon> -->
       </v-btn>
       
       <v-btn  text color="rgb(40, 31, 71)"  class="text-none  white--text" @click="LogOut()">  
@@ -65,7 +96,7 @@
                 </v-list-item-title>
               </v-item-content>
             </v-list-item>
-             <v-list-item router-link to="/users" >
+             <v-list-item router-link to="/users" v-if="userdetails.user_ROLE.S==='admin'">
               <v-list-item-icon>
                 <v-icon color="rgb(40, 31, 71)">person</v-icon>
               </v-list-item-icon>
@@ -105,7 +136,6 @@
 
 <script>
 import auth from '../app/auth';
-import axios from 'axios'
 export default {
   data(){
      return{
@@ -124,27 +154,13 @@ export default {
                    },
    methods :{
        LogOut(){
-
-   //auth.auth.signOut();
+         console.log ("maybe" )
+          console.log (auth.auth.signOut())
          
            this.$store.dispatch('LogOut')
-          .then(() => {
-            return new Promise ((resolve, reject)=>{
-        axios
-          .get('https://portal-test12.auth.us-east-1.amazoncognito.com/logout?client_id=5gul6il2bkp93j0eg9uoeb90vs&logout_uri=http://localhost:8080/logout') 
-          .then((data) => {
-            console.log("data no")
-            console.log(decodedToken)
-           console.log(data)
-           
-              }) 
-              .catch((error)=>{
-                reject(error)
-                 alert(error)
-                
-              });
-        }); 
-        })
+        //   .then(() => {
+        //  this.$router.push('/')
+        // })
            
          
                
@@ -169,5 +185,16 @@ export default {
 .listColor{
   color: rgb(40, 31, 71);
 }
-
 </style>
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About

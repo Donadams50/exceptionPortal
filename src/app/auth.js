@@ -10,6 +10,7 @@ const REDIRECT_URI = "http://localhost:8080/";
 const USERPOOL_ID = "us-east-1_lzKMtdILH";
 const REDIRECT_URI_SIGNOUT = "http://localhost:8080/logout";
 const APP_URL = "http://localhost:8080"
+//const redirect_uri
 
 var authData = {
     ClientId : CLIENT_ID, // Your client id here
@@ -67,7 +68,6 @@ export default{
         if (auth.isUserSignedIn()) {
             var userInfoKey = this.getUserInfoStorageKey();
             auth.signOut();
-
             storage.removeItem(userInfoKey);
         }
     },

@@ -433,7 +433,11 @@ export default {
               
           }) 
       
- }
+ }else{
+this.$router.push({
+         path: "/",
+        })
+    } 
 
      
     },

@@ -19,25 +19,17 @@ const getDefaultState = () => {
     myException: [],
     myExceptionReal: [],
     singleRequest: [],
-    history: []
+    history: [],
+    cognitoInfo: {},
+    loggedIn: false,
+    loadingState: true,
+    errorLoadingState: false
   }
 }
 
 
 
-function setLoggedIn(newValue) {
-  state.loggedIn = newValue;
 
-}
-
-function setLoggedOut() {
-  state.loggedIn = false;
- 
-}
-
-function setCognitoInfo(newValue){
-  state.cognitoInfo = newValue;
-}
 
 
 export default new Vuex.Store({

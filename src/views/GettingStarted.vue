@@ -1,6 +1,6 @@
 <template>
      <div id="registeruser" >
-               <Navbar/>
+<Navbar/>
      <v-snackbar
       v-model="snackbar"
       :bottom="y === 'bottom'"
@@ -140,8 +140,13 @@ export default {
   },
    mounted () { 
     
-       
+        if(this.$store.state.LOGIN_SUCCESS.length === 0){
+          this.$router.push({
+         path: "/",
+        })
+    } else{
 
+    } 
  
           },
       computed: {
@@ -187,15 +192,11 @@ if (this.$refs.form.validate()){
                                   this.snackbar1 = true
                                   
                               }) 
-
           }  
-
       }
-
       
   
       
-
     },
     
 }
@@ -211,5 +212,4 @@ if (this.$refs.form.validate()){
   font-weight: 900;
   font-size: 22px;
 }
-
 </style>
